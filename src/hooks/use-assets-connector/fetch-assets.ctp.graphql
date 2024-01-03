@@ -1,0 +1,54 @@
+query FetchAssets($sku: String!) {
+  productProjectionSearch(queryFilters: [{model: {value: {path: "variants.sku", values: [$sku]}}}]) {
+    results {
+      id
+      masterVariant {
+        sku
+        images {
+          url
+        }
+        assets {
+          id
+          key
+          sources {
+            uri
+            contentType
+          }
+          nameAllLocales {
+            locale
+            value
+          }
+          descriptionAllLocales {
+          
+            locale
+            value
+          }
+          tags
+        }
+      }
+      variants {
+        sku
+        images {
+          url
+        }
+        assets {
+          id
+          key
+          sources {
+            uri
+            contentType
+          }
+          nameAllLocales {
+            locale
+            value
+          }
+          descriptionAllLocales {
+            locale
+            value
+          }
+          tags
+        }
+      }
+    }
+  }
+}
