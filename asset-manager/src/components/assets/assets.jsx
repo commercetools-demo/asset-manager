@@ -6,11 +6,13 @@ import {
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import {
   useDataTableSortingState,
+  useRowSelection,
 } from '@commercetools-uikit/hooks';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import DataTable from '@commercetools-uikit/data-table';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Spacings from '@commercetools-uikit/spacings';
+import CheckboxInput from '@commercetools-uikit/checkbox-input';
 import Text from '@commercetools-uikit/text';
 import {
   formatLocalizedString,
@@ -20,20 +22,20 @@ import { useAsset } from '../../hooks/use-assets-connector';
 import { getErrorMessage } from '../../helpers';
 import messages from './messages';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { PlusThinIcon } from '@commercetools-uikit/icons';
-import { useState } from 'react';
+import { PlusThinIcon, BinFilledIcon } from '@commercetools-uikit/icons';
+import SelectField from '@commercetools-uikit/select-field';
+import { useMemo, useState } from 'react';
 import AddAsset from '../add-asset';
-
-const columns = [
-  { key: 'name', label: 'Name' },
-  { key: 'description', label: 'Description' },
-  { key: 'url', label: 'URL' },
-];
+import DeleteAsset from '../delete-asset';
+import PrimaryActionDropdown, {
+  Option,
+} from '@commercetools-uikit/primary-action-dropdown';
 
 const Assets = () => {
   const intl = useIntl();
 
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
   const dataLocale = useApplicationContext((context) => context.dataLocale);
   const projectLanguages = useApplicationContext(
     (context) => context.project?.languages
@@ -55,6 +57,50 @@ const Assets = () => {
     productId,
     variantId,
   });
+
+  const {
+    rows: rowsWithSelection,
+    toggleRow,
+    selectAllRows,
+    deselectAllRows,
+    getIsRowSelected,
+    getNumberOfSelectedRows,
+  } = useRowSelection('checkbox', variant?.assets || []);
+
+  const countSelectedRows = getNumberOfSelectedRows();
+  const isSelectColumnHeaderIndeterminate =
+    countSelectedRows > 0 && countSelectedRows < rowsWithSelection.length;
+  const handleSelectColumnHeaderChange =
+    countSelectedRows === 0 ? selectAllRows : deselectAllRows;
+
+  const columns = [
+    {
+      key: 'checkbox',
+      label: (
+        <CheckboxInput
+          isIndeterminate={isSelectColumnHeaderIndeterminate}
+          isChecked={countSelectedRows !== 0}
+          onChange={handleSelectColumnHeaderChange}
+        />
+      ),
+      shouldIgnoreRowClick: true,
+      align: 'center',
+      renderItem: (row) => (
+        <CheckboxInput
+          isChecked={getIsRowSelected(row.id)}
+          onChange={() => toggleRow(row.id)}
+        />
+      ),
+      disableResizing: true,
+    },
+    { key: 'name', label: 'Name' },
+    { key: 'description', label: 'Description' },
+    { key: 'url', label: 'URL' },
+  ];
+
+  const selectedAssets = useMemo(() => {
+    return rowsWithSelection?.filter((row) => getIsRowSelected(row.id));
+  }, [rowsWithSelection]);
 
   if (error || !productId || !variantId) {
     return (
@@ -81,17 +127,41 @@ const Assets = () => {
       {loading && <LoadingSpinner />}
 
       {!!variant ? (
-        <Spacings.Stack scale="l" alignItems="flex-start">
-          <PrimaryButton
-            iconLeft={<PlusThinIcon />}
-            label={intl.formatMessage(messages.addAsset)}
-            onClick={() => setIsAddAssetOpen(true)}
-            isDisabled={false}
-          />
+        <Spacings.Stack scale="l" alignItems="stretch">
+          <Spacings.Inline
+            alignItems="flex-start"
+            justifyContent="space-between"
+          >
+            <Spacings.Stack scale="s" alignItems="stretch">
+              <PrimaryActionDropdown>
+                <Option iconLeft={<></>} onClick={() => {}}>
+                  {intl.formatMessage(messages.actions)}
+                </Option>
+                <Option
+                  iconLeft={<BinFilledIcon />}
+                  onClick={() => setIsDeleteAssetOpen(true)}
+                  isDisabled={countSelectedRows === 0}
+                >
+                  <Spacings.Inline alignItems="center">
+                    <BinFilledIcon />
+                    Delete
+                  </Spacings.Inline>
+                </Option>
+              </PrimaryActionDropdown>
+            </Spacings.Stack>
+
+            <PrimaryButton
+              iconLeft={<PlusThinIcon />}
+              label={intl.formatMessage(messages.addAsset)}
+              onClick={() => setIsAddAssetOpen(true)}
+              isDisabled={false}
+            />
+          </Spacings.Inline>
+
           <DataTable
             isCondensed
             columns={columns}
-            rows={variant.assets}
+            rows={rowsWithSelection}
             itemRenderer={(item, column) => {
               switch (column.key) {
                 case 'name':
@@ -143,6 +213,14 @@ const Assets = () => {
           onClose={() => setIsAddAssetOpen(false)}
           productId={productId}
           variantId={variantId}
+        />
+      )}
+      {isDeleteAssetOpen && (
+        <DeleteAsset
+          onClose={() => setIsDeleteAssetOpen(false)}
+          productId={productId}
+          variantId={variantId}
+          selectedAssets={selectedAssets}
         />
       )}
     </Spacings.Stack>

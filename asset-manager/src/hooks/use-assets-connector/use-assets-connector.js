@@ -22,7 +22,7 @@ export const useAsset = ({ productId, variantId }) => {
     },
   });
 
-  const [execute, { error: addError, loading: addLoading }] =
+  const [execute, { error: mutationError, loading: mutationLoading }] =
     useMcMutation(AddAssetMutation);
 
   const addAsset = async (asset, version) => {
@@ -47,6 +47,24 @@ export const useAsset = ({ productId, variantId }) => {
             },
           },
         ],
+      },
+      context: {
+        target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
+      },
+    });
+  };
+  const removeAssets = async (assetIds, version) => {
+    return execute({
+      variables: {
+        version,
+        productId,
+        actions: assetIds.map((id) => ({
+          removeAsset: {
+            variantId: parseInt(variantId, 10),
+            staged: false,
+            assetId: id,
+          },
+        })),
       },
       context: {
         target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
@@ -78,8 +96,9 @@ export const useAsset = ({ productId, variantId }) => {
     variant: result,
     version,
     addAsset,
+    removeAssets,
     error: fetchError,
     loading: fetchLoading,
-    addLoading,
+    mutationLoading,
   };
 };

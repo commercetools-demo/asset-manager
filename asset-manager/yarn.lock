@@ -1806,6 +1806,22 @@
     lodash "4.17.21"
     prop-types "15.8.1"
 
+"@commercetools-uikit/buttons@16.12.1":
+  version "16.12.1"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/buttons/-/buttons-16.12.1.tgz#f0f8f5d0c1c0ce95467d7fc5f08b7abfe8e40b7c"
+  integrity sha512-7QN2vK9TSHyewPD1Sc+z/N5hXTohH6Aga8/tJC1UapqHWzU/deS7kI4gkoHhbSQB742n+GG9+LTEzDsZGzjW4g==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "16.12.1"
+    "@commercetools-uikit/design-system" "16.12.1"
+    "@commercetools-uikit/flat-button" "16.12.1"
+    "@commercetools-uikit/icon-button" "16.12.1"
+    "@commercetools-uikit/link-button" "16.12.1"
+    "@commercetools-uikit/primary-button" "16.12.1"
+    "@commercetools-uikit/secondary-button" "16.12.1"
+    "@commercetools-uikit/secondary-icon-button" "16.12.1"
+
 "@commercetools-uikit/card@^16.12.0":
   version "16.12.1"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/card/-/card-16.12.1.tgz#f27b2f80b040e3d7d89f7fbc90182e513344d1b2"
@@ -1819,6 +1835,23 @@
     "@emotion/react" "^11.10.5"
     "@emotion/styled" "^11.10.5"
     prop-types "15.8.1"
+
+"@commercetools-uikit/checkbox-input@^16.12.1":
+  version "16.12.1"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/checkbox-input/-/checkbox-input-16.12.1.tgz#59de1225d7fe98a0115e318a33779913535b89e3"
+  integrity sha512-sdsG2NDMs6sKTNoosf438ioEqBqEBW+6373rXFG/LE46lRULkfVW2q0Y0pjrP7Ffld7ffkhS96CPHU/rQ2hRbw==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/design-system" "16.12.1"
+    "@commercetools-uikit/icons" "16.12.1"
+    "@commercetools-uikit/input-utils" "16.12.1"
+    "@commercetools-uikit/select-utils" "16.12.1"
+    "@commercetools-uikit/utils" "16.12.1"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    prop-types "15.8.1"
+    react-intl "^6.3.2"
 
 "@commercetools-uikit/constraints@16.12.1", "@commercetools-uikit/constraints@^16.12.0":
   version "16.12.1"
@@ -2010,6 +2043,23 @@
     "@emotion/styled" "^11.10.5"
     prop-types "15.8.1"
 
+"@commercetools-uikit/link-button@16.12.1":
+  version "16.12.1"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/link-button/-/link-button-16.12.1.tgz#0335280d50d8997c449b5f86061a9ccf7c075f75"
+  integrity sha512-mP1gwn+hrMuBe6F5oeK1HR9Svv0sTC1N9cTHXk4rG66YGzZDlSPH6hN3capJjyEGV0gWrfFJs1fayh34FNdfdQ==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "16.12.1"
+    "@commercetools-uikit/design-system" "16.12.1"
+    "@commercetools-uikit/spacings-inline" "16.12.1"
+    "@commercetools-uikit/text" "16.12.1"
+    "@commercetools-uikit/utils" "16.12.1"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    lodash "4.17.21"
+    prop-types "15.8.1"
+
 "@commercetools-uikit/link@^16.12.0":
   version "16.12.1"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/link/-/link-16.12.1.tgz#96b9c78076290a5a26a3d947a776411acae36fc0"
@@ -2161,7 +2211,27 @@
     lodash "4.17.21"
     prop-types "15.8.1"
 
-"@commercetools-uikit/primary-button@^16.12.0":
+"@commercetools-uikit/primary-action-dropdown@^16.12.1":
+  version "16.12.1"
+  resolved "https://registry.yarnpkg.com/@commercetools-uikit/primary-action-dropdown/-/primary-action-dropdown-16.12.1.tgz#88a3c3075388825bbd83dcf624264756c747316b"
+  integrity sha512-gDzzgSm256deWgP5kBRDM4qlTEx8uEFaS7NNOb9kMyYpXPbtF9zZJNl1RbFbsVTbPb+jq3wU+ZG6T9FE6Q1t3w==
+  dependencies:
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-uikit/accessible-button" "16.12.1"
+    "@commercetools-uikit/buttons" "16.12.1"
+    "@commercetools-uikit/design-system" "16.12.1"
+    "@commercetools-uikit/hooks" "16.12.1"
+    "@commercetools-uikit/icons" "16.12.1"
+    "@commercetools-uikit/text" "16.12.1"
+    "@commercetools-uikit/utils" "16.12.1"
+    "@emotion/react" "^11.10.5"
+    "@emotion/styled" "^11.10.5"
+    lodash "4.17.21"
+    prop-types "15.8.1"
+    react-intl "^6.3.2"
+
+"@commercetools-uikit/primary-button@16.12.1", "@commercetools-uikit/primary-button@^16.12.0":
   version "16.12.1"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/primary-button/-/primary-button-16.12.1.tgz#430de612abcc340a6155cf803f635b5752cbc4e1"
   integrity sha512-+MI1xxh2JCHlsxAIprRiBlH0KqQx3gv4LWRR8vqUX1iVUwzXQUC/VCnmQXI3gg6PFqIM+Y99AK1w78N9zjTYgA==
@@ -2179,7 +2249,7 @@
     prop-types "15.8.1"
     react-intl "^6.3.2"
 
-"@commercetools-uikit/secondary-button@^16.12.0":
+"@commercetools-uikit/secondary-button@16.12.1", "@commercetools-uikit/secondary-button@^16.12.0":
   version "16.12.1"
   resolved "https://registry.yarnpkg.com/@commercetools-uikit/secondary-button/-/secondary-button-16.12.1.tgz#8531e4e1eb18518473702d3af723b5c26d7cf2b9"
   integrity sha512-OEGV+wwAubT2vbeiyo0XMGmrFFOnh+Sn1OdHIv/EA3IX+pDGl2zrkNhh7+vNc8Es6vIo0dZIVhaGzA1gI27T7A==

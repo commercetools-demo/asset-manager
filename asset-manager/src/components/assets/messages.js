@@ -22,4 +22,8 @@ export default defineMessages({
     id: 'Assets.add',
     defaultMessage: 'Add an asset',
   },
+  actions: {
+    id: 'Assets.actions',
+    defaultMessage: 'Actions',
+  },
 });
