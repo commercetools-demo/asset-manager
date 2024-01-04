@@ -20,6 +20,7 @@ query FetchAssets($where: String!) {
   products(where: $where) {
     results {
       id
+      version
       masterData {
         current {
           masterVariant {

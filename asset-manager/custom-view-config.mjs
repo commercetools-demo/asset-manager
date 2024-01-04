@@ -13,6 +13,9 @@ const config = {
       url: '${env:APPLICATION_URL}',
     },
   },
+  additionalEnv: {
+    testURL: '${env:TEST_URL}',
+  },
   oAuthScopes: {
     view: ['view_products'],
     manage: ['manage_products'],

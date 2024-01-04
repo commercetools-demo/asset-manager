@@ -1,7 +1,5 @@
 import { lazy } from 'react';
 
-const Assets = lazy(() =>
-  import('./assets' /* webpackChunkName: "assets" */)
-);
+const Assets = lazy(() => import('./assets' /* webpackChunkName: "assets" */));
 
 export default Assets;

@@ -1,1 +1,1 @@
-export { useAssetFetcher } from './use-assets-connector';
+export { useAsset } from './use-assets-connector';

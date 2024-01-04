@@ -18,4 +18,8 @@ export default defineMessages({
     id: 'Assets.noResults',
     defaultMessage: 'There are no Assets available in this project.',
   },
+  addAsset: {
+    id: 'Assets.add',
+    defaultMessage: 'Add an asset',
+  },
 });

@@ -5,23 +5,24 @@ import {
 } from '@commercetools-frontend/application-shell-connectors';
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import {
-  usePaginationState,
   useDataTableSortingState,
 } from '@commercetools-uikit/hooks';
-import Constraints from '@commercetools-uikit/constraints';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import DataTable from '@commercetools-uikit/data-table';
 import { ContentNotification } from '@commercetools-uikit/notifications';
-import { Pagination } from '@commercetools-uikit/pagination';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
 import {
   formatLocalizedString,
   transformLocalizedFieldToLocalizedString,
 } from '@commercetools-frontend/l10n';
-import { useAssetFetcher } from '../../hooks/use-assets-connector';
+import { useAsset } from '../../hooks/use-assets-connector';
 import { getErrorMessage } from '../../helpers';
 import messages from './messages';
+import PrimaryButton from '@commercetools-uikit/primary-button';
+import { PlusThinIcon } from '@commercetools-uikit/icons';
+import { useState } from 'react';
+import AddAsset from '../add-asset';
 
 const columns = [
   { key: 'name', label: 'Name' },
@@ -31,26 +32,29 @@ const columns = [
 
 const Assets = () => {
   const intl = useIntl();
-  const user = useApplicationContext((context) => context.user);
+
+  const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const dataLocale = useApplicationContext((context) => context.dataLocale);
   const projectLanguages = useApplicationContext(
     (context) => context.project?.languages
   );
-  // const hostUrl = useCustomViewContext((context) => context.hostUrl);
-  const hostUrl =
-    'https://mc.us-central1.gcp.commercetools.com/us-store/products/17dcef5d-5506-4c3e-b27d-c1b450c44182/variants/1/images';
 
-  const [_, productId, variantId] = hostUrl.match(
+  const { env, testURL } = useApplicationContext(
+    (context) => context.environment
+  );
+
+  const hostUrl = useCustomViewContext((context) => context.hostUrl);
+  const currentUrl = env === 'development' ? testURL : hostUrl;
+
+  const [_, productId, variantId] = currentUrl.match(
     '/products/([^/]+)/variants/([^/]+)/images'
   );
 
   const tableSorting = useDataTableSortingState({ key: 'key', order: 'asc' });
-  const { variant, error, loading } = useAssetFetcher({
+  const { variant, error, loading } = useAsset({
     productId,
     variantId,
   });
-
-  console.log(variant);
 
   if (error || !productId || !variantId) {
     return (
@@ -77,7 +81,13 @@ const Assets = () => {
       {loading && <LoadingSpinner />}
 
       {!!variant ? (
-        <Spacings.Stack scale="l">
+        <Spacings.Stack scale="l" alignItems="flex-start">
+          <PrimaryButton
+            iconLeft={<PlusThinIcon />}
+            label={intl.formatMessage(messages.addAsset)}
+            onClick={() => setIsAddAssetOpen(true)}
+            isDisabled={false}
+          />
           <DataTable
             isCondensed
             columns={columns}
@@ -128,9 +138,16 @@ const Assets = () => {
           <Text.Headline intlMessage={messages.noResults} />
         </Spacings.Stack>
       )}
+      {isAddAssetOpen && (
+        <AddAsset
+          onClose={() => setIsAddAssetOpen(false)}
+          productId={productId}
+          variantId={variantId}
+        />
+      )}
     </Spacings.Stack>
   );
 };
-Assets.displayName = 'Channels';
+Assets.displayName = 'Assets';
 
 export default Assets;
