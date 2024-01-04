@@ -1,52 +1,33 @@
-query FetchAssets($sku: String!) {
-  productProjectionSearch(queryFilters: [{model: {value: {path: "variants.sku", values: [$sku]}}}]) {
+fragment Variant on ProductVariant {
+  id
+  assets {
+    id
+    nameAllLocales {
+      locale
+      value
+    }
+    descriptionAllLocales {
+      locale
+      value
+    }
+    sources {
+      uri
+      contentType
+    }
+  }
+}
+query FetchAssets($where: String!) {
+  products(where: $where) {
     results {
       id
-      masterVariant {
-        sku
-        images {
-          url
-        }
-        assets {
-          id
-          key
-          sources {
-            uri
-            contentType
+      masterData {
+        current {
+          masterVariant {
+            ...Variant
           }
-          nameAllLocales {
-            locale
-            value
+          variants {
+            ...Variant
           }
-          descriptionAllLocales {
-          
-            locale
-            value
-          }
-          tags
-        }
-      }
-      variants {
-        sku
-        images {
-          url
-        }
-        assets {
-          id
-          key
-          sources {
-            uri
-            contentType
-          }
-          nameAllLocales {
-            locale
-            value
-          }
-          descriptionAllLocales {
-            locale
-            value
-          }
-          tags
         }
       }
     }

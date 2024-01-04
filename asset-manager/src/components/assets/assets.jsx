@@ -1,5 +1,8 @@
 import { useIntl } from 'react-intl';
-import { useApplicationContext, useCustomViewContext } from '@commercetools-frontend/application-shell-connectors';
+import {
+  useApplicationContext,
+  useCustomViewContext,
+} from '@commercetools-frontend/application-shell-connectors';
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import {
   usePaginationState,
@@ -21,8 +24,9 @@ import { getErrorMessage } from '../../helpers';
 import messages from './messages';
 
 const columns = [
-  { key: 'name', label: 'Channel name' },
-  { key: 'roles', label: 'Roles' },
+  { key: 'name', label: 'Name' },
+  { key: 'description', label: 'Description' },
+  { key: 'url', label: 'URL' },
 ];
 
 const Assets = () => {
@@ -32,20 +36,23 @@ const Assets = () => {
   const projectLanguages = useApplicationContext(
     (context) => context.project?.languages
   );
-  const hostUrl = useCustomViewContext((context) => context.hostUrl);
+  // const hostUrl = useCustomViewContext((context) => context.hostUrl);
+  const hostUrl =
+    'https://mc.us-central1.gcp.commercetools.com/us-store/products/17dcef5d-5506-4c3e-b27d-c1b450c44182/variants/1/images';
 
-  const match = hostUrl.match('/products/[^/]+');
-console.log("match", match);
+  const [_, productId, variantId] = hostUrl.match(
+    '/products/([^/]+)/variants/([^/]+)/images'
+  );
 
-  const { page, perPage } = usePaginationState();
   const tableSorting = useDataTableSortingState({ key: 'key', order: 'asc' });
-  const { assetsPaginatedResult: channelsPaginatedResult, error, loading } = useAssetFetcher({
-    page,
-    perPage,
-    tableSorting,
+  const { variant, error, loading } = useAssetFetcher({
+    productId,
+    variantId,
   });
 
-  if (error) {
+  console.log(variant);
+
+  if (error || !productId || !variantId) {
     return (
       <ContentNotification type="error">
         <Text.Body>{getErrorMessage(error)}</Text.Body>
@@ -53,7 +60,7 @@ console.log("match", match);
     );
   }
 
-  if (!loading && channelsPaginatedResult?.total < 1) {
+  if (!loading && !variant) {
     return (
       <ContentNotification type="info">
         <Text.Body intlMessage={messages.noResults} />
@@ -65,32 +72,18 @@ console.log("match", match);
     <Spacings.Stack scale="xl">
       <Spacings.Stack scale="s">
         <Text.Headline as="h2" intlMessage={messages.title} />
-        <Text.Subheadline as="h4">
-          {intl.formatMessage(messages.subtitle, {
-            firstName: user?.firstName,
-            lastName: user?.lastName,
-          })}
-        </Text.Subheadline>
       </Spacings.Stack>
-
-      <Constraints.Horizontal max={13}>
-        <ContentNotification type="info">
-          <Text.Body intlMessage={messages.demoHint} />
-        </ContentNotification>
-      </Constraints.Horizontal>
 
       {loading && <LoadingSpinner />}
 
-      {channelsPaginatedResult ? (
+      {!!variant ? (
         <Spacings.Stack scale="l">
           <DataTable
             isCondensed
             columns={columns}
-            rows={channelsPaginatedResult.results}
+            rows={variant.assets}
             itemRenderer={(item, column) => {
               switch (column.key) {
-                case 'roles':
-                  return item.roles.join(', ');
                 case 'name':
                   return formatLocalizedString(
                     {
@@ -105,6 +98,22 @@ console.log("match", match);
                       fallback: NO_VALUE_FALLBACK,
                     }
                   );
+                case 'description':
+                  return formatLocalizedString(
+                    {
+                      name: transformLocalizedFieldToLocalizedString(
+                        item.descriptionAllLocales ?? []
+                      ),
+                    },
+                    {
+                      key: 'description',
+                      locale: dataLocale,
+                      fallbackOrder: projectLanguages,
+                      fallback: NO_VALUE_FALLBACK,
+                    }
+                  );
+                case 'url':
+                  return item.sources.map((source) => source.uri).join(', ');
                 default:
                   return null;
               }
@@ -113,15 +122,12 @@ console.log("match", match);
             sortDirection={tableSorting.value.order}
             onSortChange={tableSorting.onChange}
           />
-          <Pagination
-            page={page.value}
-            onPageChange={page.onChange}
-            perPage={perPage.value}
-            onPerPageChange={perPage.onChange}
-            totalItems={channelsPaginatedResult.total}
-          />
         </Spacings.Stack>
-      ) : null}
+      ) : (
+        <Spacings.Stack scale="s">
+          <Text.Headline intlMessage={messages.noResults} />
+        </Spacings.Stack>
+      )}
     </Spacings.Stack>
   );
 };
