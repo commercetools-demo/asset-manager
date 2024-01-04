@@ -11,7 +11,7 @@ deployAs:
         - key: CTP_REGION
           description: Region where the commercetools Composable Commerce Project is hosted
           required: true
-        - key: APPLICATION_ID
+        - key: CUSTOM_VIEW_ID
           description: The Custom Application ID
           required: true
         - key: APPLICATION_URL
