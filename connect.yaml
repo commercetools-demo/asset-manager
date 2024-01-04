@@ -7,7 +7,6 @@ deployAs:
         - key: CTP_PROJECT_KEY
           description: Project key of the commercetools Composable Commerce Project
           required: true
-          default: 'default-key'
         - key: CTP_REGION
           description: Region where the commercetools Composable Commerce Project is hosted
           required: true
@@ -26,7 +25,7 @@ deployAs:
         - key: ENABLE_NEW_JSX_TRANSFORM
           description: enable new jsx transform
           required: true
-          default: 'true'
+          default: "true"
       securedConfiguration:
         - key: CTP_CLIENT_ID
           description: client_id of an API Client for the commercetools Composable Commerce Project
