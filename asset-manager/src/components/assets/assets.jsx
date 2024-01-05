@@ -11,13 +11,12 @@ import { useAsset } from '../../hooks/use-assets-connector';
 import { getErrorMessage } from '../../helpers';
 import messages from './messages';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { PlusThinIcon, BinFilledIcon } from '@commercetools-uikit/icons';
+import { PlusThinIcon } from '@commercetools-uikit/icons';
 import { useState } from 'react';
 import AddAsset from '../add-asset';
 import DeleteAsset from '../delete-asset';
-import PrimaryActionDropdown, {
-  Option,
-} from '@commercetools-uikit/primary-action-dropdown';
+import SelectField from '@commercetools-uikit/select-field';
+
 import AssetTable from '../asset-table';
 
 const Assets = () => {
@@ -74,21 +73,15 @@ const Assets = () => {
             justifyContent="space-between"
           >
             <Spacings.Stack scale="s" alignItems="stretch">
-              <PrimaryActionDropdown>
-                <Option iconLeft={<></>} onClick={() => {}}>
-                  {intl.formatMessage(messages.actions)}
-                </Option>
-                <Option
-                  iconLeft={<BinFilledIcon />}
-                  onClick={() => setIsDeleteAssetOpen(true)}
-                  isDisabled={selectedAssets.length === 0}
-                >
-                  <Spacings.Inline alignItems="center">
-                    <BinFilledIcon />
-                    Delete
-                  </Spacings.Inline>
-                </Option>
-              </PrimaryActionDropdown>
+              <SelectField
+                title="Actions"
+                value="null"
+                isDisabled={selectedAssets.length === 0}
+                options={[
+                  { value: 'delete', label: 'Delete' },
+                ]}
+                onChange={() => setIsDeleteAssetOpen(true)}
+              />
             </Spacings.Stack>
 
             <PrimaryButton
