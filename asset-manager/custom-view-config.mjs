@@ -24,7 +24,7 @@ const config = {
   typeSettings: {
     size: 'LARGE',
   },
-  locators: ['products.product_variant_details.images'],
+  locators: ['products.product_variant_details.general'],
 };
 
 export default config;

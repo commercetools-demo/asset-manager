@@ -60,6 +60,7 @@ const AddAsset = ({ onClose, productId, variantId }) => {
         },
         version
       );
+      handleClose();
     },
   });
 
