@@ -18,7 +18,7 @@ import DeleteAsset from '../delete-asset';
 import PrimaryActionDropdown, {
   Option,
 } from '@commercetools-uikit/primary-action-dropdown';
-import AssetTable from '../asset-table/asset-table';
+import AssetTable from '../asset-table';
 
 const Assets = () => {
   const intl = useIntl();
