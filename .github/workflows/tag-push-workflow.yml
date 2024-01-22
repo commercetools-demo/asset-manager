@@ -1,0 +1,44 @@
+name: Tag Push Trigger
+env:
+  CONNECT_PROJECT_KEY: "asset-manager-connector"
+  CTP_REGION: "us-central1.gcp"
+  REPO_URL: "git@github.com:commercetools-demo/asset-manager.git"
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  trigger-external-url:
+    runs-on: self-hosted  # Specify your self-hosted runner
+    steps:
+    - name: Get Access Token
+      id: get_token
+      run: |
+        TOKEN_RESPONSE=$(curl -X POST -u ${{ secrets.CLIENT_ID }}:${{ secrets.CLIENT_SECRET }} "https://auth.$CTP_REGION.commercetools.com/oauth/token?grant_type=client_credentials")
+        ACCESS_TOKEN=$(echo $TOKEN_RESPONSE | jq -r '.access_token')
+        echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
+
+    - name: Get draft
+      run: |
+        DRAFT_RESPONSE=$(curl -X GET -H "Authorization: Bearer $ACCESS_TOKEN" -H "Content-Type: application/json" "https://connect.$CTP_REGION.commercetools.com/connectors/drafts/key=$CONNECT_PROJECT_KEY")
+        echo $DRAFT_RESPONSE
+        DRAFT_VERSION=$(echo $DRAFT_RESPONSE | jq -r '.version')
+        echo "DRAFT_VERSION=$DRAFT_VERSION" >> $GITHUB_ENV
+
+    - name: Update draft
+      run: |
+        TAG_NAME=$(echo "${{ github.ref }}" | sed 's|refs/tags/||')
+        echo $TAG_NAME
+        UPDTAE_DRAFT_RESPONSE=$(curl -X POST --header "Authorization: Bearer $ACCESS_TOKEN" --header "Content-Type: application/json" --data-raw "{\"version\" : $DRAFT_VERSION ,\"actions\" : [ {\"action\" : \"setRepository\",\"url\": \"$REPO_URL\",\"tag\": \"$TAG_NAME\"  } ]}" "https://connect.$CTP_REGION.commercetools.com/connectors/drafts/key=$CONNECT_PROJECT_KEY")
+        echo $UPDTAE_DRAFT_RESPONSE
+        DRAFT_VERSION=$(echo $UPDTAE_DRAFT_RESPONSE | jq -r '.version')
+        echo "DRAFT_VERSION=$DRAFT_VERSION" >> $GITHUB_ENV
+
+    - name: Previewable draft
+      run: |
+        UPDTAE_DRAFT_RESPONSE=$(curl -X POST --header "Authorization: Bearer $ACCESS_TOKEN" --header "Content-Type: application/json" --data "{\"version\" : $DRAFT_VERSION,\"actions\" : [ {\"action\" : \"updatePreviewable\"} ]}" "https://connect.$CTP_REGION.commercetools.com/connectors/drafts/key=$CONNECT_PROJECT_KEY")
+        echo $UPDTAE_DRAFT_RESPONSE
+        DRAFT_VERSION=$(echo $UPDTAE_DRAFT_RESPONSE | jq -r '.version')
+        echo "DRAFT_VERSION=$DRAFT_VERSION" >> $GITHUB_ENV

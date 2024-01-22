@@ -16,8 +16,8 @@ import { useState } from 'react';
 import AddAsset from '../add-asset';
 import DeleteAsset from '../delete-asset';
 import SelectField from '@commercetools-uikit/select-field';
-
 import AssetTable from '../asset-table';
+import { InfoMainPage } from '@commercetools-frontend/application-components';
 
 const Assets = () => {
   const intl = useIntl();
@@ -59,67 +59,67 @@ const Assets = () => {
   }
 
   return (
-    <Spacings.Stack scale="xl">
-      <Spacings.Stack scale="s">
-        <Text.Headline as="h2" intlMessage={messages.title} />
-      </Spacings.Stack>
-
-      {loading && <LoadingSpinner />}
-
-      {!!variant ? (
-        <Spacings.Stack scale="l" alignItems="stretch">
-          <Spacings.Inline
-            alignItems="flex-start"
-            justifyContent="space-between"
-          >
-            <Spacings.Stack scale="s" alignItems="stretch">
-              <SelectField
-                title="Actions"
-                value="null"
-                isDisabled={selectedAssets.length === 0}
-                options={[
-                  { value: 'delete', label: 'Delete' },
-                ]}
-                onChange={() => setIsDeleteAssetOpen(true)}
-              />
-            </Spacings.Stack>
-
-            <PrimaryButton
-              iconLeft={<PlusThinIcon />}
-              label={intl.formatMessage(messages.addAsset)}
-              onClick={() => setIsAddAssetOpen(true)}
-              isDisabled={false}
-            />
-          </Spacings.Inline>
-
-          {!!variant.assets && variant.assets.length > 0 && (
-            <AssetTable
-              items={variant.assets}
-              onSelectionChange={setSelectedAssets}
-            />
-          )}
-        </Spacings.Stack>
-      ) : (
+    <InfoMainPage title={intl.formatMessage(messages.title)}>
+      <Spacings.Stack scale="xl">
         <Spacings.Stack scale="s">
-          <Text.Headline intlMessage={messages.noResults} />
+          <Text.Headline as="h2" intlMessage={messages.title} />
         </Spacings.Stack>
-      )}
-      {isAddAssetOpen && (
-        <AddAsset
-          onClose={() => setIsAddAssetOpen(false)}
-          productId={productId}
-          variantId={variantId}
-        />
-      )}
-      {isDeleteAssetOpen && (
-        <DeleteAsset
-          onClose={() => setIsDeleteAssetOpen(false)}
-          productId={productId}
-          variantId={variantId}
-          selectedAssets={selectedAssets}
-        />
-      )}
-    </Spacings.Stack>
+
+        {loading && <LoadingSpinner />}
+
+        {!!variant ? (
+          <Spacings.Stack scale="l" alignItems="stretch">
+            <Spacings.Inline
+              alignItems="flex-start"
+              justifyContent="space-between"
+            >
+              <Spacings.Stack scale="s" alignItems="stretch">
+                <SelectField
+                  title="Actions"
+                  value="null"
+                  isDisabled={selectedAssets.length === 0}
+                  options={[{ value: 'delete', label: 'Delete' }]}
+                  onChange={() => setIsDeleteAssetOpen(true)}
+                />
+              </Spacings.Stack>
+
+              <PrimaryButton
+                iconLeft={<PlusThinIcon />}
+                label={intl.formatMessage(messages.addAsset)}
+                onClick={() => setIsAddAssetOpen(true)}
+                isDisabled={false}
+              />
+            </Spacings.Inline>
+
+            {!!variant.assets && variant.assets.length > 0 && (
+              <AssetTable
+                items={variant.assets}
+                onSelectionChange={setSelectedAssets}
+              />
+            )}
+          </Spacings.Stack>
+        ) : (
+          <Spacings.Stack scale="s">
+            <Text.Headline intlMessage={messages.noResults} />
+          </Spacings.Stack>
+        )}
+        {isAddAssetOpen && (
+          <AddAsset
+            onClose={() => setIsAddAssetOpen(false)}
+            productId={productId}
+            variantId={variantId}
+          />
+        )}
+        {isDeleteAssetOpen && (
+          <DeleteAsset
+            onClose={() => setIsDeleteAssetOpen(false)}
+            productId={productId}
+            variantId={variantId}
+            selectedAssets={selectedAssets}
+          />
+        )}
+      </Spacings.Stack>
+    </InfoMainPage>
   );
 };
 Assets.displayName = 'Assets';
