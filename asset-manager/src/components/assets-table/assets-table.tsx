@@ -14,11 +14,12 @@ import {
 } from '@commercetools-frontend/l10n';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 import CheckboxInput from '@commercetools-uikit/checkbox-input';
-import { useDataTableSortingState } from '@commercetools-uikit/hooks';
 import DataTableManager, {
   UPDATE_ACTIONS,
 } from '@commercetools-uikit/data-table-manager';
 import { TAsset } from '../../types/generated/ctp';
+
+const KEY_NAME = 'checkbox';
 
 const initialVisibleColumns: Array<TColumn<TAsset>> = [
   { key: 'name', label: 'Name' },
@@ -39,10 +40,9 @@ interface AssetTableProps {
 }
 
 const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
-  const tableSorting = useDataTableSortingState({ key: 'key', order: 'asc' });
-
   const [tableData, setTableData] = useState({
     columns: initialColumnsState,
+    visibleColumns: initialVisibleColumns,
     visibleColumnKeys: initialVisibleColumns.map(({ key }) => key),
   });
 
@@ -55,7 +55,7 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
     deselectAllRows,
     getIsRowSelected,
     getNumberOfSelectedRows,
-  } = useRowSelection('checkbox', items);
+  } = useRowSelection(KEY_NAME, items);
 
   const { dataLocale, projectLanguages } = useApplicationContext((context) => ({
     dataLocale: context.dataLocale ?? '',
@@ -68,20 +68,9 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
   const handleSelectColumnHeaderChange =
     countSelectedRows === 0 ? selectAllRows : deselectAllRows;
 
-  const mappedColumns = tableData.columns.reduce(
-    (columns, column) => ({
-      ...columns,
-      [column.key]: column,
-    }),
-    {}
-  );
-  const visibleColumns = tableData.visibleColumnKeys.map(
-    (columnKey) => mappedColumns[columnKey]
-  );
-
   const columnsWithSelect: Array<TColumn<TAsset>> = [
     {
-      key: 'checkbox',
+      key: KEY_NAME,
       label: (
         <CheckboxInput
           isIndeterminate={isSelectColumnHeaderIndeterminate}
@@ -98,8 +87,9 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
         />
       ),
       disableResizing: true,
+      width: '50px',
     },
-    ...visibleColumns,
+    ...tableData.visibleColumns,
   ];
   const onSettingChange: TDataTableManagerProps['onSettingsChange'] = (
     action,
@@ -125,7 +115,7 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
           Array.isArray(nextValue) &&
             setTableData({
               ...tableData,
-              columns: tableData.columns.filter((column) =>
+              visibleColumns: tableData.columns.filter((column) =>
                 nextValue.includes(column.key)
               ),
               visibleColumnKeys: nextValue,
@@ -133,8 +123,6 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
         }
         break;
       }
-      default:
-        break;
     }
   };
 
@@ -204,9 +192,6 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
               return null;
           }
         }}
-        sortedBy={tableSorting.value.key}
-        sortDirection={tableSorting.value.order}
-        onSortChange={tableSorting.onChange}
       />
     </DataTableManager>
   );
