@@ -6,15 +6,14 @@ const config = {
   cloudIdentifier: '${env:CLOUD_IDENTIFIER}',
   env: {
     development: {
-      initialProjectKey: '${env:INITIAL_PROJECT_KEY}',
+      initialProjectKey: 'tech-sales-manufacturing-store',
+      hostUriPath:
+          '/tech-sales-manufacturing-store/products/e67e484e-b69c-4508-a229-953933b1c19c/variants/1',
     },
     production: {
       customViewId: '${env:CUSTOM_VIEW_ID}',
       url: '${env:APPLICATION_URL}',
     },
-  },
-  additionalEnv: {
-    testURL: '${env:TEST_URL}',
   },
   oAuthScopes: {
     view: ['view_products'],

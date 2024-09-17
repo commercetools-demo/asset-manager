@@ -1,0 +1,35 @@
+fragment Variant on ProductVariant {
+    id
+    assets {
+        id
+        nameAllLocales {
+            locale
+            value
+        }
+        descriptionAllLocales {
+            locale
+            value
+        }
+        sources {
+            uri
+            contentType
+        }
+    }
+}
+
+query FetchProduct($id: String) {
+    product(id: $id) {
+        id
+        version
+        masterData {
+            current {
+                masterVariant {
+                    ...Variant
+                }
+                variants {
+                    ...Variant
+                }
+            }
+        }
+    }
+}
