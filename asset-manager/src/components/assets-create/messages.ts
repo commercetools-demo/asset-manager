@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'AddAsset.title',
-    defaultMessage: 'Add an asset',
+    defaultMessage: 'Add asset',
   },
   previous: {
     id: 'AddAsset.back',
@@ -13,10 +13,5 @@ export default defineMessages({
     id: 'AddAsset.form.message.success',
     description: 'Success message for create type',
     defaultMessage: 'Your Asset has been created.',
-  },
-  revert: {
-    id: 'FieldDefinitions.Details.revert',
-    description: 'Revert Changes',
-    defaultMessage: 'Revert Changes',
   },
 });

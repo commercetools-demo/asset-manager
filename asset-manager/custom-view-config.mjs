@@ -8,7 +8,7 @@ const config = {
     development: {
       initialProjectKey: 'tech-sales-manufacturing-store',
       hostUriPath:
-          '/tech-sales-manufacturing-store/products/e67e484e-b69c-4508-a229-953933b1c19c/variants/1',
+          '/tech-sales-manufacturing-store/products/b6f52a51-48b7-4509-b334-2e5ac8139d48/variants/1',
     },
     production: {
       customViewId: '${env:CUSTOM_VIEW_ID}',

@@ -1,4 +1,11 @@
 import { ApolloError, isApolloError, ServerError } from '@apollo/client';
+import {
+  TGraphqlUpdateAction,
+  TSyncAction,
+  TSetAssetDescriptionActionPayload,
+  TChangeAssetNameActionPayload,
+} from './types';
+import { transformLocalizedStringToLocalizedField } from '@commercetools-frontend/l10n';
 
 export const getErrorMessage = (error: ApolloError) =>
   error.graphQLErrors?.map((e) => e.message).join('\n') || error.message;
@@ -26,3 +33,65 @@ export const extractErrorFromGraphQlResponse = (graphQlResponse: unknown) => {
 
   return graphQlResponse;
 };
+
+const isChangeAssetNameActionPayload = (
+  actionPayload: Record<string, unknown>
+): actionPayload is TChangeAssetNameActionPayload => {
+  return (actionPayload as TChangeAssetNameActionPayload)?.name !== undefined;
+};
+const isSetAssetDescriptionActionPayload = (
+  actionPayload: Record<string, unknown>
+): actionPayload is TSetAssetDescriptionActionPayload => {
+  return (
+    (actionPayload as TSetAssetDescriptionActionPayload)?.description !==
+    undefined
+  );
+};
+
+const getAssetNameFromPayload = (payload: TChangeAssetNameActionPayload) => ({
+  ...payload,
+  staged: false,
+  name: transformLocalizedStringToLocalizedField(payload.name),
+});
+
+const getAssetDescriptionFromPayload = (
+  payload: TSetAssetDescriptionActionPayload
+) => ({
+  ...payload,
+  staged: false,
+  description: transformLocalizedStringToLocalizedField(payload.description),
+});
+
+const convertAction = (action: TSyncAction): TGraphqlUpdateAction => {
+  const { action: actionName, ...actionPayload } = action;
+  let actionPL = actionPayload;
+  switch (actionName) {
+    case 'changeAssetName': {
+      if (isChangeAssetNameActionPayload(actionPayload)) {
+        actionPL = getAssetNameFromPayload(actionPayload);
+      }
+      break;
+    }
+    case 'setAssetDescription': {
+      if (isSetAssetDescriptionActionPayload(actionPayload)) {
+        actionPL = getAssetDescriptionFromPayload(actionPayload);
+      }
+      break;
+    }
+    case 'setAssetSources': {
+      actionPL = { ...actionPayload, staged: false };
+    }
+  }
+  return {
+    [actionName]: actionPL,
+  };
+};
+
+export const createGraphQlUpdateActions = (actions: TSyncAction[]) =>
+  actions.reduce<TGraphqlUpdateAction[]>(
+    (previousActions, syncAction) => [
+      ...previousActions,
+      convertAction(syncAction),
+    ],
+    []
+  );

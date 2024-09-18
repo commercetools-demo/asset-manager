@@ -10,7 +10,7 @@ import { useIntl } from 'react-intl';
 import { TAsset } from '../../types/generated/ctp';
 import { DOMAINS } from '@commercetools-frontend/constants';
 import {
-  showApiErrorNotification,
+  useShowApiErrorNotification,
   TApiErrorNotificationOptions,
   useShowNotification,
 } from '@commercetools-frontend/actions-global';
@@ -36,6 +36,7 @@ const AssetsDelete: FC<Props> = ({
   const confirmationModalState = useModalState();
   const productUpdater = useProductUpdater();
   const showNotification = useShowNotification();
+  const showApiErrorNotification = useShowApiErrorNotification();
 
   const handleClose = () => {
     confirmationModalState.closeModal();

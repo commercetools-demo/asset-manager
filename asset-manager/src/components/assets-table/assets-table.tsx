@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import DataTable, {
   TColumn,
@@ -18,6 +18,7 @@ import DataTableManager, {
   UPDATE_ACTIONS,
 } from '@commercetools-uikit/data-table-manager';
 import { TAsset } from '../../types/generated/ctp';
+import { TDataTableProps } from '@commercetools-uikit/data-table/dist/declarations/src/data-table';
 
 const KEY_NAME = 'checkbox';
 
@@ -34,12 +35,13 @@ const initialColumnsState: Array<TColumn<TAsset>> = [
   ...initialHiddenColumns,
 ];
 
-interface AssetTableProps {
+interface Props {
   items: Array<TAsset>;
   onSelectionChange: React.Dispatch<React.SetStateAction<Array<TAsset>>>;
+  onRowClick?: TDataTableProps<TAsset>['onRowClick'];
 }
 
-const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
+const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
   const [tableData, setTableData] = useState({
     columns: initialColumnsState,
     visibleColumns: initialVisibleColumns,
@@ -192,6 +194,7 @@ const AssetsTable = ({ items, onSelectionChange }: AssetTableProps) => {
               return null;
           }
         }}
+        onRowClick={onRowClick}
       />
     </DataTableManager>
   );

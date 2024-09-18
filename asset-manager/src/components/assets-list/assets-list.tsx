@@ -15,6 +15,7 @@ import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create/assets-create';
 import { TAsset } from '../../types/generated/ctp';
 import { useProductFetcher } from '../../hooks/use-assets-connector';
+import AssetsEdit from '../assets-edit/assets-edit';
 
 type Props = { productId: string; variantId: number };
 
@@ -22,6 +23,8 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
   const intl = useIntl();
 
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
+  const [isEditAssetOpen, setIsEditAssetOpen] = useState(false);
+  const [assetId, setAssetId] = useState<string | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
   const [selectedAction, setSelectedAction] = useState<'delete'>();
@@ -85,7 +88,7 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
       }
     >
       <Spacings.Stack scale="xl">
-        {!!variant ? (
+        {variant?.assets && variant.assets.length > 0 ? (
           <Spacings.Stack scale="l" alignItems="stretch">
             <Spacings.Inline
               alignItems="flex-start"
@@ -112,6 +115,10 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
               <AssetTable
                 items={variant.assets}
                 onSelectionChange={setSelectedAssets}
+                onRowClick={(row) => {
+                  setAssetId(row.id);
+                  setIsEditAssetOpen(true);
+                }}
               />
             )}
           </Spacings.Stack>
@@ -128,6 +135,18 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
             }}
             productId={productId}
             variantId={variantId}
+            version={product.version}
+          />
+        )}
+        {isEditAssetOpen && assetId && (
+          <AssetsEdit
+            onClose={async () => {
+              await refetch();
+              setIsEditAssetOpen(false);
+            }}
+            productId={productId}
+            variantId={variantId}
+            assetId={assetId}
             version={product.version}
           />
         )}

@@ -1,35 +1,35 @@
 fragment Variant on ProductVariant {
+  id
+  assets {
     id
-    assets {
-        id
-        nameAllLocales {
-            locale
-            value
-        }
-        descriptionAllLocales {
-            locale
-            value
-        }
-        sources {
-            uri
-            contentType
-        }
+    nameAllLocales {
+      locale
+      value
     }
+    descriptionAllLocales {
+      locale
+      value
+    }
+    sources {
+      uri
+      contentType
+    }
+  }
 }
 
 mutation UpdateProduct($id: String, $key: String, $version: Long!, $actions: [ProductUpdateAction!]!) {
-    updateProduct(id: $id, key: $key, version: $version, actions: $actions) {
-        id
-        version
-        masterData {
-            current {
-                masterVariant {
-                    ...Variant
-                }
-                variants {
-                    ...Variant
-                }
-            }
+  updateProduct(id: $id, key: $key, version: $version, actions: $actions) {
+    id
+    version
+    masterData {
+      current {
+        masterVariant {
+          ...Variant
         }
+        variants {
+          ...Variant
+        }
+      }
     }
+  }
 }
