@@ -2,6 +2,7 @@ fragment Variant on ProductVariant {
     id
     assets {
         id
+        key
         nameAllLocales {
             locale
             value

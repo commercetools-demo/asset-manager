@@ -80,6 +80,11 @@ const convertAction = (action: TSyncAction): TGraphqlUpdateAction => {
     }
     case 'setAssetSources': {
       actionPL = { ...actionPayload, staged: false };
+      break;
+    }
+    case 'setAssetKey': {
+      actionPL = { ...actionPayload, staged: false };
+      break;
     }
   }
   return {

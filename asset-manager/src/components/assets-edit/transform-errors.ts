@@ -1,36 +1,34 @@
 import omitEmpty from 'omit-empty-es';
 
-const transformErrors = (apiErrors: unknown) => {
-  const formErrors: Array<any> = [];
-  const unmappedErrors: Array<any> = [];
+type TransformedErrors = {
+  unmappedErrors: unknown[];
+  formErrors: Record<string, { duplicate: boolean }>;
+};
 
-  if (!Array.isArray(apiErrors))
-    return {
-      formErrors,
-      unmappedErrors: [apiErrors],
-    };
+export const transformErrors = (graphQlErrors: unknown): TransformedErrors => {
+  const errorsToMap = Array.isArray(graphQlErrors)
+    ? graphQlErrors
+    : [graphQlErrors];
 
-  apiErrors.forEach((graphQLError) => {
-    // if (
-    //   (graphQLError?.extensions?.code ?? graphQLError?.code) ===
-    //   'DiscountCodeNonApplicable'
-    // ) {
-    //   // Error when the discount code does not exist
-    //   if (graphQLError?.reason === 'DoesNotExist') {
-    //     return formErrors.push({ code: MISSING_DISCOUNT_CODE });
-    //   }
-    //   if (graphQLError?.action?.code === 'expired') {
-    //     // else it's outdated outdatedDiscountCode
-    //     return formErrors.push({ code: OUTDATED_DISCOUNT_CODE });
-    //   }
-    // }
-    return unmappedErrors.push(graphQLError);
-  });
+  const { formErrors, unmappedErrors } = errorsToMap.reduce<TransformedErrors>(
+    (transformedErrors, graphQlError) => {
+      const errorCode = graphQlError?.extensions?.code ?? graphQlError.code;
+
+      if (errorCode === 'InvalidInput') {
+        transformedErrors.formErrors['key'] = { duplicate: true };
+      } else {
+        transformedErrors.unmappedErrors.push(graphQlError);
+      }
+      return transformedErrors;
+    },
+    {
+      formErrors: {}, // will be mappped to form field error messages
+      unmappedErrors: [], // will result in dispatching `showApiErrorNotification`
+    }
+  );
 
   return {
     formErrors: omitEmpty(formErrors),
     unmappedErrors,
   };
 };
-
-export default transformErrors;

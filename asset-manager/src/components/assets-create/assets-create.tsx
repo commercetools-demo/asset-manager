@@ -44,6 +44,10 @@ export const AssetsCreate: FC<Props> = ({
     async (formikValues: TFormValues, formikHelpers) => {
       try {
         const draft: TAssetDraftInput = {
+          key:
+            formikValues.key && formikValues.key.length > 0
+              ? formikValues.key
+              : undefined,
           name: transformLocalizedStringToLocalizedField(
             LocalizedTextInput.omitEmptyTranslations(formikValues.name)
           ),
@@ -89,6 +93,7 @@ export const AssetsCreate: FC<Props> = ({
     <AssetForm
       onSubmit={handleSubmit}
       initialValues={{
+        key: '',
         name: LocalizedTextInput.createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString([]) ?? {}

@@ -23,6 +23,7 @@ import { TDataTableProps } from '@commercetools-uikit/data-table/dist/declaratio
 const KEY_NAME = 'checkbox';
 
 const initialVisibleColumns: Array<TColumn<TAsset>> = [
+  { key: 'key', label: 'Key' },
   { key: 'name', label: 'Name' },
   { key: 'description', label: 'Description' },
   { key: 'url', label: 'URL' },
@@ -191,7 +192,7 @@ const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
             case 'url':
               return item.sources.map((source) => source.uri).join(', ');
             default:
-              return null;
+              return item[column.key];
           }
         }}
         onRowClick={onRowClick}

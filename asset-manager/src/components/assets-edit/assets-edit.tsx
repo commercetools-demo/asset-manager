@@ -12,7 +12,6 @@ import AssetForm, { TFormValues } from '../asset-form/asset-form';
 import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import transformErrors from './transform-errors';
 import {
   useProductFetcher,
   useProductUpdater,
@@ -23,6 +22,7 @@ import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
 import Spacings from '@commercetools-uikit/spacings';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import { createSyncProducts } from '@commercetools/sync-actions';
+import { transformErrors } from './transform-errors';
 const syncTypes = createSyncProducts();
 
 type Props = {
@@ -69,6 +69,10 @@ export const AssetsEdit: FC<Props> = ({
             formikValues.description
           ),
           sources: [{ uri: formikValues.url }],
+          key:
+            formikValues.key && formikValues.key.length > 0
+              ? formikValues.key
+              : undefined,
           id: assetId,
         };
 
@@ -76,6 +80,7 @@ export const AssetsEdit: FC<Props> = ({
           masterVariant: {
             sku: variant?.sku,
             id: variant?.id,
+            key: variant?.key,
             assets: [
               {
                 name: transformLocalizedFieldToLocalizedString(
@@ -176,6 +181,7 @@ export const AssetsEdit: FC<Props> = ({
     <AssetForm
       onSubmit={handleSubmit}
       initialValues={{
+        key: asset.key || '',
         name: LocalizedTextInput.createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString(asset.nameAllLocales) ?? {}
@@ -198,7 +204,7 @@ export const AssetsEdit: FC<Props> = ({
             isOpen={true}
             onClose={onClose}
             isPrimaryButtonDisabled={
-              !formProps.isDirty || formProps.isSubmitting
+              !formProps.isDirty || formProps.isSubmitting || !formProps.isValid
             }
             isSecondaryButtonDisabled={!formProps.isDirty}
             onSecondaryButtonClick={formProps.handleReset}
