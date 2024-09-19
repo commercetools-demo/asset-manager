@@ -41,5 +41,5 @@ resource "vercel_project" "mc-asset-manager" {
     key = "CLOUD_IDENTIFIER"
     target = ["production", "preview", "development"]
     value = local.envs["CLOUD_IDENTIFIER"]
-  }
+  }]
 }
