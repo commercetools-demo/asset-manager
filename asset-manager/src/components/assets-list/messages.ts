@@ -21,4 +21,9 @@ export default defineMessages({
     id: 'Assets.actions',
     defaultMessage: 'Actions',
   },
+  reorderAttributesButtonLabel: {
+    id: 'Products.VariantsDetailAttributes.reorderAttributesButtonLabel',
+    description: 'Label for the attributes reorder button',
+    defaultMessage: 'Reorder fields',
+  },
 });

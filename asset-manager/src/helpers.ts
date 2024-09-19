@@ -50,7 +50,6 @@ const isSetAssetDescriptionActionPayload = (
 
 const getAssetNameFromPayload = (payload: TChangeAssetNameActionPayload) => ({
   ...payload,
-  staged: false,
   name: transformLocalizedStringToLocalizedField(payload.name),
 });
 
@@ -58,7 +57,6 @@ const getAssetDescriptionFromPayload = (
   payload: TSetAssetDescriptionActionPayload
 ) => ({
   ...payload,
-  staged: false,
   description: transformLocalizedStringToLocalizedField(payload.description),
 });
 
@@ -78,17 +76,9 @@ const convertAction = (action: TSyncAction): TGraphqlUpdateAction => {
       }
       break;
     }
-    case 'setAssetSources': {
-      actionPL = { ...actionPayload, staged: false };
-      break;
-    }
-    case 'setAssetKey': {
-      actionPL = { ...actionPayload, staged: false };
-      break;
-    }
   }
   return {
-    [actionName]: actionPL,
+    [actionName]: { ...actionPL, staged: false },
   };
 };
 

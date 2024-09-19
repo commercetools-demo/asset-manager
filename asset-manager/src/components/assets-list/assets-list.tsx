@@ -6,16 +6,18 @@ import Text from '@commercetools-uikit/text';
 import { getErrorMessage } from '../../helpers';
 import messages from './messages';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { PlusThinIcon } from '@commercetools-uikit/icons';
+import { DragDropIcon, PlusThinIcon } from '@commercetools-uikit/icons';
 import { FC, useState } from 'react';
 import DeleteAsset from '../assets-delete';
 import SelectField from '@commercetools-uikit/select-field';
+import SecondaryButton from '@commercetools-uikit/secondary-button';
 import AssetTable from '../assets-table';
 import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create/assets-create';
 import { TAsset } from '../../types/generated/ctp';
 import { useProductFetcher } from '../../hooks/use-assets-connector';
 import AssetsEdit from '../assets-edit/assets-edit';
+import AssetsSortableList from '../assets-sortable-list/assets-sortable-list';
 
 type Props = { productId: string; variantId: number };
 
@@ -24,6 +26,7 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
 
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [isEditAssetOpen, setIsEditAssetOpen] = useState(false);
+  const [isReorder, setIsReorder] = useState(false);
   const [assetId, setAssetId] = useState<string | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
@@ -89,12 +92,16 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
     >
       <Spacings.Stack scale="xl">
         {variant?.assets && variant.assets.length > 0 ? (
-          <Spacings.Stack scale="l" alignItems="stretch">
+          <Spacings.Stack scale="xs" alignItems="stretch">
             <Spacings.Inline
               alignItems="flex-start"
               justifyContent="space-between"
             >
-              <Spacings.Stack scale="s" alignItems="stretch">
+              <Spacings.Inline
+                scale="s"
+                justifyContent={'center'}
+                alignItems={'flex-end'}
+              >
                 <SelectField
                   name={'actions'}
                   title={''}
@@ -108,10 +115,30 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
                   isDisabled={selectedAssets.length === 0}
                   value={selectedAction}
                 />
-              </Spacings.Stack>
+                <SecondaryButton
+                  iconLeft={<DragDropIcon />}
+                  label={intl.formatMessage(
+                    messages.reorderAttributesButtonLabel
+                  )}
+                  isToggleButton={true}
+                  isToggled={isReorder}
+                  onClick={() => setIsReorder(!isReorder)}
+                />
+              </Spacings.Inline>
             </Spacings.Inline>
-
-            {!!variant.assets && variant.assets.length > 0 && (
+            {!!variant.assets && variant.assets.length > 0 && isReorder && (
+              <AssetsSortableList
+                items={variant.assets}
+                variant={variant}
+                productId={productId}
+                version={product.version}
+                onClose={async () => {
+                  await refetch();
+                  setIsReorder(false);
+                }}
+              />
+            )}
+            {!!variant.assets && variant.assets.length > 0 && !isReorder && (
               <AssetTable
                 items={variant.assets}
                 onSelectionChange={setSelectedAssets}

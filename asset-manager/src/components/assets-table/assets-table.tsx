@@ -90,7 +90,7 @@ const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
         />
       ),
       disableResizing: true,
-      width: '50px',
+      width: '75px',
     },
     ...tableData.visibleColumns,
   ];

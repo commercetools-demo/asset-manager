@@ -23,7 +23,7 @@ import Spacings from '@commercetools-uikit/spacings';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import { createSyncProducts } from '@commercetools/sync-actions';
 import { transformErrors } from './transform-errors';
-const syncTypes = createSyncProducts();
+const syncProducts = createSyncProducts();
 
 type Props = {
   onClose: () => Promise<void>;
@@ -110,7 +110,7 @@ export const AssetsEdit: FC<Props> = ({
           },
         };
 
-        const actions = syncTypes.buildActions(now, before);
+        const actions = syncProducts.buildActions(now, before);
         await productUpdater.execute({
           id: productId,
           version: version,
