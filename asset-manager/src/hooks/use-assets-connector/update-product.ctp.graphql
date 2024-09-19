@@ -1,21 +1,4 @@
-fragment Variant on ProductVariant {
-  id
-  assets {
-    id
-    nameAllLocales {
-      locale
-      value
-    }
-    descriptionAllLocales {
-      locale
-      value
-    }
-    sources {
-      uri
-      contentType
-    }
-  }
-}
+#import './product-variant-fragment.ctp.graphql'
 
 mutation UpdateProduct($id: String, $key: String, $version: Long!, $actions: [ProductUpdateAction!]!) {
   updateProduct(id: $id, key: $key, version: $version, actions: $actions) {

@@ -1,22 +1,4 @@
-fragment Variant on ProductVariant {
-    id
-    assets {
-        id
-        key
-        nameAllLocales {
-            locale
-            value
-        }
-        descriptionAllLocales {
-            locale
-            value
-        }
-        sources {
-            uri
-            contentType
-        }
-    }
-}
+#import './product-variant-fragment.ctp.graphql'
 
 query FetchProduct($id: String) {
     product(id: $id) {

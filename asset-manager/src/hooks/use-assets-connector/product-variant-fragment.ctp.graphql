@@ -1,0 +1,24 @@
+fragment Variant on ProductVariant {
+    id
+    assets {
+        id
+        key
+        nameAllLocales {
+            locale
+            value
+        }
+        descriptionAllLocales {
+            locale
+            value
+        }
+        sources {
+            key
+            uri
+            contentType
+            dimensions {
+                width
+                height
+            }
+        }
+    }
+}
