@@ -75,10 +75,11 @@ const AssetsList: FC<Props> = ({ productId, variantId }) => {
 
   return (
     <InfoMainPage
-      title={intl.formatMessage(messages.title)}
       customTitleRow={
         <Spacings.Inline justifyContent="space-between">
-          <Text.Headline as="h2">Customer View</Text.Headline>
+          <Text.Headline as="h2">
+            {intl.formatMessage(messages.title)}
+          </Text.Headline>
           <Spacings.Inline justifyContent="space-between">
             <PrimaryButton
               iconLeft={<PlusThinIcon />}
