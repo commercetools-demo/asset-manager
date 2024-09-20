@@ -12,53 +12,38 @@ import AssetForm, { TFormValues } from '../asset-form/asset-form';
 import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import {
-  useProductFetcher,
-  useProductUpdater,
-} from '../../hooks/use-assets-connector';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Text from '@commercetools-uikit/text';
-import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
-import Spacings from '@commercetools-uikit/spacings';
-import LoadingSpinner from '@commercetools-uikit/loading-spinner';
-import { createSyncProducts } from '@commercetools/sync-actions';
 import { transformErrors } from './transform-errors';
-const syncProducts = createSyncProducts();
+import { TAsset } from '../../types/generated/ctp';
 
 type Props = {
+  onEdit: (
+    draft: {
+      name: { [locale: string]: string };
+      description: { [locale: string]: string };
+      sources?: Array<{
+        uri?: string;
+        key?: string;
+        contentType?: string;
+        dimensions?: { width?: number; height?: number };
+      }>;
+      key?: string;
+      id?: string;
+    },
+    asset: TAsset
+  ) => Promise<void>;
   onClose: () => Promise<void>;
-  productId: string;
-  assetId: string;
-  variantId: number;
-  version: number;
+  asset: TAsset;
 };
 
-export const AssetsEdit: FC<Props> = ({
-  productId,
-  variantId,
-  version,
-  onClose,
-  assetId,
-}) => {
+export const AssetsEdit: FC<Props> = ({ onClose, asset, onEdit }) => {
   const intl = useIntl();
   const { projectLanguages } = useApplicationContext((context) => ({
     projectLanguages: context.project?.languages ?? [],
   }));
   const showNotification = useShowNotification();
   const showApiErrorNotification = useShowApiErrorNotification();
-
-  const { loading, error, product } = useProductFetcher({
-    id: productId,
-  });
-
-  const productUpdater = useProductUpdater();
-
-  const masterVariant = product?.masterData?.current?.masterVariant;
-  const variants = product?.masterData?.current?.variants || [];
-  const variant = [masterVariant, ...variants].find(
-    (variant) => variant?.id === variantId
-  );
-  const asset = variant?.assets.find((asset) => asset.id === assetId);
 
   const handleSubmit = useCallback(
     async (formikValues: TFormValues, formikHelpers) => {
@@ -89,51 +74,10 @@ export const AssetsEdit: FC<Props> = ({
             formikValues.key && formikValues.key.length > 0
               ? formikValues.key
               : undefined,
-          id: assetId,
+          id: asset.id,
         };
 
-        const before = {
-          masterVariant: {
-            sku: variant?.sku,
-            id: variant?.id,
-            key: variant?.key,
-            assets: [
-              {
-                name: transformLocalizedFieldToLocalizedString(
-                  asset?.nameAllLocales || []
-                ),
-                description:
-                  transformLocalizedFieldToLocalizedString(
-                    asset?.descriptionAllLocales || []
-                  ) || {},
-                sources: asset?.sources,
-                id: assetId,
-                key: asset?.key,
-              },
-            ],
-          },
-        };
-
-        const now = {
-          masterVariant: {
-            sku: variant?.sku,
-            id: variant?.id,
-            assets: [
-              // new image
-              {
-                ...draft,
-              },
-            ],
-          },
-        };
-
-        const actions = syncProducts.buildActions(now, before);
-        let translatedActions = createGraphQlUpdateActions(actions);
-        await productUpdater.execute({
-          id: productId,
-          version: version,
-          actions: translatedActions,
-        });
+        await onEdit(draft, asset);
 
         showNotification({
           kind: 'success',
@@ -155,37 +99,6 @@ export const AssetsEdit: FC<Props> = ({
     },
     []
   );
-
-  if (error) {
-    return (
-      <ContentNotification type="error">
-        <Text.Body>{getErrorMessage(error)}</Text.Body>
-      </ContentNotification>
-    );
-  }
-  if (loading) {
-    return (
-      <Spacings.Stack alignItems="center">
-        <LoadingSpinner />
-      </Spacings.Stack>
-    );
-  }
-
-  if (!product) {
-    return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
-    );
-  }
-
-  if (!variant) {
-    return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
-    );
-  }
 
   if (!asset) {
     return (
@@ -225,7 +138,7 @@ export const AssetsEdit: FC<Props> = ({
         return (
           <FormModalPage
             title={intl.formatMessage(messages.title)}
-            subtitle={assetId}
+            subtitle={asset.id}
             topBarPreviousPathLabel={intl.formatMessage(messages.previous)}
             isOpen={true}
             onClose={onClose}

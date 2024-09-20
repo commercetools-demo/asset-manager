@@ -15,26 +15,16 @@ import {
   useShowNotification,
 } from '@commercetools-frontend/actions-global';
 import transformErrors from '../assets-create/transform-errors';
-import { useProductUpdater } from '../../hooks/use-assets-connector';
 
 type Props = {
   onClose: (...args: unknown[]) => unknown;
   selectedAssets: Array<TAsset>;
-  productId: string;
-  variantId: number;
-  version: number;
+  onDelete: (assets: Array<TAsset>) => Promise<void>;
 };
 
-const AssetsDelete: FC<Props> = ({
-  onClose,
-  productId,
-  variantId,
-  selectedAssets,
-  version,
-}) => {
+const AssetsDelete: FC<Props> = ({ onClose, selectedAssets, onDelete }) => {
   const intl = useIntl();
   const confirmationModalState = useModalState();
-  const productUpdater = useProductUpdater();
   const showNotification = useShowNotification();
   const showApiErrorNotification = useShowApiErrorNotification();
 
@@ -45,19 +35,8 @@ const AssetsDelete: FC<Props> = ({
 
   const handleConfirm = useCallback(async () => {
     try {
-      await productUpdater.execute({
-        id: productId,
-        version: version,
-        actions: selectedAssets.map((asset) => {
-          return {
-            removeAsset: {
-              variantId: variantId,
-              staged: false,
-              assetId: asset.id,
-            },
-          };
-        }),
-      });
+      await onDelete(selectedAssets);
+
       showNotification({
         kind: 'success',
         domain: DOMAINS.SIDE,

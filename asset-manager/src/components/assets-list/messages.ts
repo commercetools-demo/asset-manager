@@ -26,4 +26,9 @@ export default defineMessages({
     description: 'Label for the attributes reorder button',
     defaultMessage: 'Reorder fields',
   },
+  createSuccess: {
+    id: 'AddAsset.form.message.success',
+    description: 'Success message for create type',
+    defaultMessage: 'Your Asset has been created.',
+  },
 });

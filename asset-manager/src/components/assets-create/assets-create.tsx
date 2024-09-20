@@ -16,29 +16,19 @@ import {
 } from '@commercetools-frontend/l10n';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 import transformErrors from './transform-errors';
-import { TAddProductAsset, TAssetDraftInput } from '../../types/generated/ctp';
-import { useProductUpdater } from '../../hooks/use-assets-connector';
+import { TAssetDraftInput } from '../../types/generated/ctp';
 
 type Props = {
   onClose: () => Promise<void>;
-  productId: string;
-  variantId: number;
-  version: number;
+  onCreate: (draft: TAssetDraftInput) => Promise<void>;
 };
 
-export const AssetsCreate: FC<Props> = ({
-  productId,
-  variantId,
-  version,
-  onClose,
-}) => {
+export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
   const intl = useIntl();
   const { projectLanguages } = useApplicationContext((context) => ({
     projectLanguages: context.project?.languages ?? [],
   }));
   const showNotification = useShowNotification();
-
-  const productUpdater = useProductUpdater();
 
   const handleSubmit = useCallback(
     async (formikValues: TFormValues, formikHelpers) => {
@@ -73,17 +63,7 @@ export const AssetsCreate: FC<Props> = ({
           }),
         };
 
-        const addAssetAction: TAddProductAsset = {
-          asset: draft,
-          variantId: variantId,
-          staged: false,
-        };
-
-        await productUpdater.execute({
-          id: productId,
-          version: version,
-          actions: [{ addAsset: addAssetAction }],
-        });
+        await onCreate(draft);
 
         showNotification({
           kind: 'success',

@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import Assets from './components/assets-list';
 import { useCustomViewContext } from '@commercetools-frontend/application-shell-connectors';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Text from '@commercetools-uikit/text';
 import messages from './components/assets-list/messages';
+import ProductAssets from './components/product-assets';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -22,7 +22,10 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
     );
   }
   return (
-    <Assets productId={productId} variantId={Number.parseInt(variantId, 10)} />
+    <ProductAssets
+      productId={productId}
+      variantId={Number.parseInt(variantId, 10)}
+    />
   );
 };
 ApplicationRoutes.displayName = 'ApplicationRoutes';
