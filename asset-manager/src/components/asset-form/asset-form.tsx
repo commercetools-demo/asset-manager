@@ -7,25 +7,46 @@ import TextField from '@commercetools-uikit/text-field';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
-import TextInput from '@commercetools-uikit/text-input';
 import Spacings from '@commercetools-uikit/spacings';
 import messages from './messages';
 import Grid from '@commercetools-uikit/grid';
 import { designTokens } from '@commercetools-uikit/design-system';
 import Card from '@commercetools-uikit/card';
+import AssetsSourcesForm, {
+  OnChangeValue,
+} from '../assets-sources-form/assets-sources-form';
+import TextInput from '@commercetools-uikit/text-input';
 type Formik = ReturnType<typeof useFormik>;
+
+export type AssetSource = {
+  key?: string;
+  uri?: string;
+  width?: number;
+  height?: number;
+  contentType?: string;
+};
 
 export type TFormValues = {
   name: Record<string, string>;
   description: Record<string, string>;
-  url: string;
   key: string;
+  sources?: Array<AssetSource> | undefined;
 };
+
+export type TSourceError = {
+  key: { missing?: boolean };
+  uri: { missing?: boolean };
+  width: { missing?: boolean };
+  height: { missing?: boolean };
+  contentType: { missing?: boolean };
+};
+
+export type TSourceErrors = { [key: number]: TSourceError };
 
 type TErrors = {
   name: { missing?: boolean };
-  url: { missing?: boolean };
   key: { invalidInput?: boolean };
+  sources: TSourceErrors;
 };
 
 const renderKeyInputErrors = (key: string) => {
@@ -44,8 +65,8 @@ const renderKeyInputErrors = (key: string) => {
 const validate = (formikValues: TFormValues) => {
   const errors: TErrors = {
     name: {},
-    url: {},
     key: {},
+    sources: {},
   };
 
   if (formikValues.key && formikValues.key.length > 0) {
@@ -58,9 +79,29 @@ const validate = (formikValues: TFormValues) => {
   if (LocalizedTextInput.isEmpty(formikValues.name)) {
     errors.name.missing = true;
   }
-  if (!formikValues.url || TextInput.isEmpty(formikValues.url)) {
-    errors.url.missing = true;
-  }
+
+  formikValues.sources?.forEach((item, index) => {
+    const sourceError: TSourceError = {
+      uri: {},
+      width: {},
+      height: {},
+      key: {},
+      contentType: {},
+    };
+    if (!item.uri || TextInput.isEmpty(item.uri)) {
+      sourceError.uri.missing = true;
+    }
+    console.log(item);
+    if (item.width && !item.height) {
+      sourceError.height.missing = true;
+    }
+    if (!item.width && item.height) {
+      sourceError.width.missing = true;
+    }
+    if (Object.keys(sourceError).length !== 0) {
+      errors.sources[index] = sourceError;
+    }
+  });
 
   return omitEmpty<TErrors>(errors);
 };
@@ -92,6 +133,36 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
     validate,
     enableReinitialize: true,
   });
+
+  const handleAddEnumValue = (enumTemplate: AssetSource) => {
+    const enumDraftItemIndexes = formik.values.sources?.length || 0;
+    formik.setFieldValue(`sources.${enumDraftItemIndexes}`, enumTemplate);
+  };
+
+  const handleRemoveEnumValue = (absoluteIndex: number) => {
+    if (formik.values.sources && formik.values.sources[absoluteIndex]) {
+      const newArray = [...formik.values.sources];
+      newArray.splice(absoluteIndex, 1);
+      formik.setFieldValue('sources', newArray, false);
+    }
+  };
+
+  const handleChangeEnumValue: OnChangeValue = (
+    field,
+    nextValue,
+    absoluteIndex
+  ) => {
+    // if this is the first change, create the draft within the changes
+    if (!formik.values.sources || !formik.values.sources[absoluteIndex]) {
+      formik.setFieldValue(`sources.${absoluteIndex}`, {
+        key: '',
+        label: undefined,
+      });
+    }
+    // `field` can be `key` or `label` (or `label.de` depending on the attribute being localized or not)
+    formik.setFieldValue(`sources.${absoluteIndex}.${field}`, nextValue, false);
+    formik.setFieldTouched(`sources.${absoluteIndex}.${field}`, true);
+  };
 
   const formElements = (
     <FormikProvider value={formik}>
@@ -150,17 +221,13 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
               />
             </Card>
           </Grid.Item>
-          <TextField
-            name="url"
-            title={intl.formatMessage(messages.url)}
-            isRequired={true}
-            value={formik.values.url}
-            errors={TextField.toFieldErrors<TFormValues>(formik.errors).url}
-            touched={formik.touched.url}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
         </Grid>
+        <AssetsSourcesForm
+          formik={formik}
+          onAddEnumValue={handleAddEnumValue}
+          onChangeValue={handleChangeEnumValue}
+          onRemoveValue={handleRemoveEnumValue}
+        />
       </Spacings.Stack>
     </FormikProvider>
   );

@@ -54,7 +54,23 @@ export const AssetsCreate: FC<Props> = ({
           description: transformLocalizedStringToLocalizedField(
             LocalizedTextInput.omitEmptyTranslations(formikValues.description)
           ),
-          sources: [{ uri: formikValues.url }],
+          sources: formikValues.sources?.map((source) => {
+            return {
+              uri: source.uri || '',
+              key: source.key && source.key.length > 0 ? source.key : undefined,
+              contentType:
+                source.contentType && source.contentType.length > 0
+                  ? source.contentType
+                  : undefined,
+              dimensions:
+                source.width && source.height
+                  ? {
+                      width: source.width,
+                      height: source.height,
+                    }
+                  : undefined,
+            };
+          }),
         };
 
         const addAssetAction: TAddProductAsset = {
@@ -102,7 +118,6 @@ export const AssetsCreate: FC<Props> = ({
           projectLanguages,
           transformLocalizedFieldToLocalizedString([]) ?? {}
         ),
-        url: '',
       }}
     >
       {(formProps) => {

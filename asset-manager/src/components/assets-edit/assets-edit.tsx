@@ -68,7 +68,23 @@ export const AssetsEdit: FC<Props> = ({
           description: LocalizedTextInput.omitEmptyTranslations(
             formikValues.description
           ),
-          sources: [{ uri: formikValues.url }],
+          sources: formikValues.sources?.map((source) => {
+            return {
+              uri: source.uri,
+              key: source.key && source.key.length > 0 ? source.key : undefined,
+              contentType:
+                source.contentType && source.contentType.length > 0
+                  ? source.contentType
+                  : undefined,
+              dimensions:
+                source.width && source.height
+                  ? {
+                      width: source.width,
+                      height: source.height,
+                    }
+                  : undefined,
+            };
+          }),
           key:
             formikValues.key && formikValues.key.length > 0
               ? formikValues.key
@@ -92,6 +108,7 @@ export const AssetsEdit: FC<Props> = ({
                   ) || {},
                 sources: asset?.sources,
                 id: assetId,
+                key: asset?.key,
               },
             ],
           },
@@ -111,10 +128,11 @@ export const AssetsEdit: FC<Props> = ({
         };
 
         const actions = syncProducts.buildActions(now, before);
+        let translatedActions = createGraphQlUpdateActions(actions);
         await productUpdater.execute({
           id: productId,
           version: version,
-          actions: createGraphQlUpdateActions(actions),
+          actions: translatedActions,
         });
 
         showNotification({
@@ -192,7 +210,15 @@ export const AssetsEdit: FC<Props> = ({
             asset.descriptionAllLocales || []
           ) ?? {}
         ),
-        url: asset.sources[0].uri,
+        sources: asset.sources.map((source) => {
+          return {
+            key: source.key || '',
+            uri: source.uri || '',
+            contentType: source.contentType || '',
+            width: source.dimensions?.width,
+            height: source.dimensions?.height,
+          };
+        }),
       }}
     >
       {(formProps) => {
