@@ -4,6 +4,7 @@ import {
   TSyncAction,
   TSetAssetDescriptionActionPayload,
   TChangeAssetNameActionPayload,
+  TAddAssetActionPayload,
 } from './types';
 import { transformLocalizedStringToLocalizedField } from '@commercetools-frontend/l10n';
 
@@ -48,6 +49,12 @@ const isSetAssetDescriptionActionPayload = (
   );
 };
 
+const isAddAssetActionPayload = (
+  actionPayload: Record<string, unknown>
+): actionPayload is TAddAssetActionPayload => {
+  return actionPayload.asset !== undefined;
+};
+
 const getAssetNameFromPayload = (payload: TChangeAssetNameActionPayload) => ({
   ...payload,
   name: transformLocalizedStringToLocalizedField(payload.name),
@@ -60,7 +67,25 @@ const getAssetDescriptionFromPayload = (
   description: transformLocalizedStringToLocalizedField(payload.description),
 });
 
-const convertAction = (action: TSyncAction): TGraphqlUpdateAction => {
+const getAddAssetActionPayload = (payload: TAddAssetActionPayload) => {
+  const asset = payload.asset;
+  const { id, ...rest } = asset;
+  return {
+    ...payload,
+    asset: {
+      ...rest,
+      name: transformLocalizedStringToLocalizedField(payload.asset.name),
+      description: transformLocalizedStringToLocalizedField(
+        payload.asset.description
+      ),
+    },
+  };
+};
+
+const convertAction = (
+  action: TSyncAction,
+  defaults?: { [x: string]: unknown }
+): TGraphqlUpdateAction => {
   const { action: actionName, ...actionPayload } = action;
   let actionPL = actionPayload;
   switch (actionName) {
@@ -76,17 +101,26 @@ const convertAction = (action: TSyncAction): TGraphqlUpdateAction => {
       }
       break;
     }
+    case 'addAsset': {
+      if (isAddAssetActionPayload(actionPayload)) {
+        actionPL = getAddAssetActionPayload(actionPayload);
+      }
+      break;
+    }
   }
   return {
-    [actionName]: { ...actionPL, staged: false },
+    [actionName]: { ...actionPL, ...defaults },
   };
 };
 
-export const createGraphQlUpdateActions = (actions: TSyncAction[]) =>
-  actions.reduce<TGraphqlUpdateAction[]>(
-    (previousActions, syncAction) => [
-      ...previousActions,
-      convertAction(syncAction),
-    ],
+export const createGraphQlUpdateActions = (
+  actions: TSyncAction[],
+  defaults?: { [x: string]: unknown }
+) => {
+  return actions.reduce<TGraphqlUpdateAction[]>(
+    (previousActions, syncAction) => {
+      return [...previousActions, convertAction(syncAction, defaults)];
+    },
     []
   );
+};

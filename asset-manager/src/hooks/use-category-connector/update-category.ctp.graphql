@@ -1,0 +1,7 @@
+#import './category-fragment.ctp.graphql'
+
+mutation UpdateCategory($id: String, $key: String, $version: Long!, $actions: [CategoryUpdateAction!]!) {
+  updateCategory(id: $id, key: $key, version: $version, actions: $actions) {
+    ...Category
+  }
+}

@@ -17,8 +17,6 @@ import AssetsSortableList from '../assets-sortable-list';
 import { ApolloQueryResult } from '@apollo/client';
 
 type Props = {
-  productId: string;
-  variantId: number;
   onEdit: (
     draft: {
       name: { [locale: string]: string };

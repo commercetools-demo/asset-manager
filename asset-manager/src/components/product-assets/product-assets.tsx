@@ -10,7 +10,7 @@ import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
 import {
   useProductFetcher,
   useProductUpdater,
-} from '../../hooks/use-assets-connector';
+} from '../../hooks/use-product-connector';
 import { createSyncProducts } from '@commercetools/sync-actions';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Text from '@commercetools-uikit/text';
@@ -115,7 +115,9 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
     };
 
     const actions = syncProducts.buildActions(now, before);
-    let translatedActions = createGraphQlUpdateActions(actions);
+    let translatedActions = createGraphQlUpdateActions(actions, {
+      staged: false,
+    });
     await productUpdater.execute({
       id: productId,
       version: product.version,
@@ -175,13 +177,13 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
     await productUpdater.execute({
       id: productId,
       version: product.version,
-      actions: createGraphQlUpdateActions(actions),
+      actions: createGraphQlUpdateActions(actions, {
+        staged: false,
+      }),
     });
   };
   return (
     <Assets
-      productId={productId}
-      variantId={variantId}
       onCreate={onCreate}
       onEdit={onEdit}
       onSortFinish={onSortFinish}

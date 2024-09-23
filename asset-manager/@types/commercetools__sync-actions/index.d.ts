@@ -8,4 +8,5 @@ declare module '@commercetools/sync-actions' {
     buildActions: typeof buildActions;
   };
   export function createSyncProducts(): Syncer;
+  export function createSyncCategories(): Syncer;
 }

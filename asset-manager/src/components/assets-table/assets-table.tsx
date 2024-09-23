@@ -192,7 +192,7 @@ const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
             case 'url':
               return item.sources.map((source) => source.uri).join(', ');
             default:
-              return item[column.key];
+              return item[column.key] || NO_VALUE_FALLBACK;
           }
         }}
         onRowClick={onRowClick}

@@ -2,8 +2,9 @@ import type { ReactNode } from 'react';
 import { useCustomViewContext } from '@commercetools-frontend/application-shell-connectors';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Text from '@commercetools-uikit/text';
-import messages from './components/assets-list/messages';
+import messages from './messages';
 import ProductAssets from './components/product-assets';
+import CategoryAssets from './components/category-assets';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
@@ -14,7 +15,9 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
   const [_, productId, variantId] =
     hostUrl.match('/products/([^/]+)/variants/([^/]+)') || [];
 
-  if (!productId || !variantId) {
+  const [__, categoryId] = hostUrl.match('/categories/([^/]+)/[^/]+') || [];
+
+  if (!productId && !variantId && !categoryId) {
     return (
       <ContentNotification type="error">
         <Text.Body intlMessage={messages.noResults} />
@@ -22,10 +25,15 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
     );
   }
   return (
-    <ProductAssets
-      productId={productId}
-      variantId={Number.parseInt(variantId, 10)}
-    />
+    <>
+      {productId && variantId && (
+        <ProductAssets
+          productId={productId}
+          variantId={Number.parseInt(variantId, 10)}
+        />
+      )}
+      {categoryId && <CategoryAssets categoryId={categoryId} />}
+    </>
   );
 };
 ApplicationRoutes.displayName = 'ApplicationRoutes';

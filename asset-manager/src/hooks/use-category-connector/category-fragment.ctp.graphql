@@ -1,0 +1,25 @@
+fragment Category on Category {
+    id
+    version
+    assets {
+        id
+        key
+        nameAllLocales {
+            locale
+            value
+        }
+        descriptionAllLocales {
+            locale
+            value
+        }
+        sources {
+            key
+            uri
+            contentType
+            dimensions {
+                width
+                height
+            }
+        }
+    }
+}

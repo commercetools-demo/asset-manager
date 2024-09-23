@@ -91,7 +91,6 @@ const validate = (formikValues: TFormValues) => {
     if (!item.uri || TextInput.isEmpty(item.uri)) {
       sourceError.uri.missing = true;
     }
-    console.log(item);
     if (item.width && !item.height) {
       sourceError.height.missing = true;
     }

@@ -11,3 +11,7 @@ export type TChangeAssetNameActionPayload = {
 export type TSetAssetDescriptionActionPayload = {
   description: LocalizedString;
 };
+
+export type TAddAssetActionPayload = {
+  asset: { name: LocalizedString; description?: LocalizedString; id?: string };
+};
