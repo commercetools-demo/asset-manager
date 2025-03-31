@@ -8,8 +8,7 @@ const config = {
     development: {
       initialProjectKey: 'tech-sales-manufacturing-store',
       hostUriPath:
-      // '/tech-sales-manufacturing-store/products/b6f52a51-48b7-4509-b334-2e5ac8139d48/variants/1',
-        '/tech-sales-manufacturing-store/categories/71df7924-79b8-42a2-af3d-cd424269de27/general',
+        '/tech-sales-manufacturing-store/products/b12eb265-c174-4900-adc8-4aab0ec0ca5f/variants/1/images',
     },
     production: {
       customViewId: '${env:CUSTOM_VIEW_ID}',
@@ -26,15 +25,14 @@ const config = {
   },
   labelAllLocales: [
     {
-      locale: "en",
-      value: "Asset Manager"
-    }
+      locale: 'en',
+      value: 'Asset Manager',
+    },
   ],
   locators: [
     'products.product_variant_details.general',
-    'products.product_details.variants',
     'products.product_variant_details.images',
-    'categories.category_details.general'
+    'categories.category_details.general',
   ],
 };
 
