@@ -3,6 +3,7 @@
  */
 const config = {
   name: 'Asset Manager',
+  description: 'Manage Assets for Product Variants and Categories.',
   cloudIdentifier: '${env:CLOUD_IDENTIFIER}',
   env: {
     development: {
