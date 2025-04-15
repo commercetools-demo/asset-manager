@@ -1,7 +1,0 @@
-#import './category-fragment.ctp.graphql'
-
-query FetchCategory($id: String) {
-    category(id: $id) {
-        ...Category
-    }
-}

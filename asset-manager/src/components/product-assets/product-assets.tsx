@@ -7,16 +7,16 @@ import {
 } from '../../types/generated/ctp';
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
-import {
-  useProductFetcher,
-  useProductUpdater,
-} from '../../hooks/use-product-connector';
 import { createSyncProducts } from '@commercetools/sync-actions';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Text from '@commercetools-uikit/text';
 import Spacings from '@commercetools-uikit/spacings';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import messages from '../assets-list/messages';
+import {
+  useProductFetcher,
+  useProductUpdater,
+} from 'commercetools-demo-shared-data-fetching-hooks';
 const syncProducts = createSyncProducts();
 
 type Props = { productId: string; variantId: number };
@@ -26,6 +26,7 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   const { loading, error, product, refetch } = useProductFetcher({
     id: productId,
+    includeAssets: true,
   });
 
   if (error) {
@@ -122,6 +123,7 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
       id: productId,
       version: product.version,
       actions: translatedActions,
+      includeAssets: true,
     });
   };
   const onCreate = async (draft: TAssetDraftInput) => {

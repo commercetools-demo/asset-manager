@@ -16,7 +16,7 @@ import messages from '../assets-list/messages';
 import {
   useCategoryFetcher,
   useCategoryUpdater,
-} from '../../hooks/use-category-connector';
+} from 'commercetools-demo-shared-data-fetching-hooks';
 const syncCategories = createSyncCategories();
 
 type Props = { categoryId: string };
@@ -26,6 +26,7 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
 
   const { loading, error, category, refetch } = useCategoryFetcher({
     id: categoryId,
+    includeAssets: true,
   });
 
   if (error) {
@@ -100,6 +101,7 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
       id: categoryId,
       version: category.version,
       actions: translatedActions,
+      includeAssets: true,
     });
   };
   const onCreate = async (draft: TAssetDraftInput) => {

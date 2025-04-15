@@ -1403,7 +1403,7 @@
     lodash "4.17.21"
     omit-empty-es "1.2.0"
 
-"@commercetools-frontend/application-shell-connectors@23.2.2":
+"@commercetools-frontend/application-shell-connectors@23.2.2", "@commercetools-frontend/application-shell-connectors@^23.2.2":
   version "23.2.2"
   resolved "https://registry.yarnpkg.com/@commercetools-frontend/application-shell-connectors/-/application-shell-connectors-23.2.2.tgz#078aaf3a6c751be23ba6f556bc77bd4774be0424"
   integrity sha512-MawZqETI2s/snmpI4J1Vb508IpR+zm/bjI0YqLoGjClpRxB/5cGDJotcaP12ozf0qTkBBP4fhhIVDcTeVNXZqA==
@@ -1819,7 +1819,7 @@
     prop-types "15.8.1"
     reselect "4.1.8"
 
-"@commercetools-frontend/sdk@23.2.2":
+"@commercetools-frontend/sdk@23.2.2", "@commercetools-frontend/sdk@^23.2.2":
   version "23.2.2"
   resolved "https://registry.yarnpkg.com/@commercetools-frontend/sdk/-/sdk-23.2.2.tgz#baf5216bea504e9bbe781d6def6730d5a29dfed4"
   integrity sha512-HYss1d0I5aDBaHyvAXyRWRbSEIsgQHlITbEBO/dIjhYN8FezPvzlnGzM8CItpmrVMEaXrdf3MobSRyGThdcwSA==
@@ -6594,6 +6594,23 @@ commander@^7.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
   integrity sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==
 
+commercetools-demo-shared-data-fetching-hooks@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/commercetools-demo-shared-data-fetching-hooks/-/commercetools-demo-shared-data-fetching-hooks-0.0.8.tgz#7920376582f6a907b7cc70cb9be9e7a88f807393"
+  integrity sha512-ETrNnFHkDBzqOH5XXA/+WDiRwepOih7/nvPhjqPuEITWkjya8WfGClGn15v6Lbz1+TL10XwrXIq36VLjugX3hA==
+  dependencies:
+    "@apollo/client" "3.7.14"
+    "@babel/runtime" "^7.20.13"
+    "@babel/runtime-corejs3" "^7.20.13"
+    "@commercetools-frontend/application-shell-connectors" "^23.2.2"
+    "@commercetools-frontend/constants" "23.2.2"
+    "@commercetools-frontend/l10n" "23.2.2"
+    "@commercetools-frontend/sdk" "^23.2.2"
+    "@commercetools/sync-actions" "^5.14.0"
+    omit-empty-es "^1.2.0"
+    react-intl "^6.4.7"
+    react-redux "7.2.9"
+
 common-tags@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/common-tags/-/common-tags-1.8.2.tgz#94ebb3c076d26032745fd54face7f688ef5ac9c6"
@@ -10931,7 +10948,7 @@ obuf@^1.0.0, obuf@^1.1.2:
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
-omit-empty-es@1.2.0:
+omit-empty-es@1.2.0, omit-empty-es@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/omit-empty-es/-/omit-empty-es-1.2.0.tgz#698dd1cb8fed05ba3e22f42570e752659ae52e0a"
   integrity sha512-4g0KMUt/IvlnnMt0lONaOStBsWs2R9Vi5dDOrBvu36m4J7KBx6EDcdqCrTrnTWknWQgo3VLj4Tjfcxf1Hs+0uA==
