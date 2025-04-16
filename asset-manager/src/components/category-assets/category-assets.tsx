@@ -101,7 +101,6 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
       id: categoryId,
       version: category.version,
       actions: translatedActions,
-      includeAssets: true,
     });
   };
   const onCreate = async (draft: TAssetDraftInput) => {

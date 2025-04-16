@@ -6594,10 +6594,10 @@ commander@^7.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
   integrity sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==
 
-commercetools-demo-shared-data-fetching-hooks@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/commercetools-demo-shared-data-fetching-hooks/-/commercetools-demo-shared-data-fetching-hooks-0.0.8.tgz#7920376582f6a907b7cc70cb9be9e7a88f807393"
-  integrity sha512-ETrNnFHkDBzqOH5XXA/+WDiRwepOih7/nvPhjqPuEITWkjya8WfGClGn15v6Lbz1+TL10XwrXIq36VLjugX3hA==
+commercetools-demo-shared-data-fetching-hooks@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/commercetools-demo-shared-data-fetching-hooks/-/commercetools-demo-shared-data-fetching-hooks-0.0.11.tgz#5c106eb1356dbb4e969ede55672b13df1a81004e"
+  integrity sha512-Zw5FGWqqCkwnrzR4TZewtSFNObyu63Phu7xGaAanBKnLhrZBW2gr5oCTeU+5z3ZyCwtCxhSl+7EdNe8CkvADkQ==
   dependencies:
     "@apollo/client" "3.7.14"
     "@babel/runtime" "^7.20.13"

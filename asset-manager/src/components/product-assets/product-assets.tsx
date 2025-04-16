@@ -123,7 +123,6 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
       id: productId,
       version: product.version,
       actions: translatedActions,
-      includeAssets: true,
     });
   };
   const onCreate = async (draft: TAssetDraftInput) => {
