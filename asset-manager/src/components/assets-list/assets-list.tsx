@@ -3,17 +3,15 @@ import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
 import messages from './messages';
 import PrimaryButton from '@commercetools-uikit/primary-button';
-import { DragDropIcon, PlusThinIcon } from '@commercetools-uikit/icons';
+import { PlusThinIcon } from '@commercetools-uikit/icons';
 import { FC, useState } from 'react';
 import DeleteAsset from '../assets-delete';
 import SelectField from '@commercetools-uikit/select-field';
-import SecondaryButton from '@commercetools-uikit/secondary-button';
 import AssetTable from '../assets-table';
 import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create';
 import { TAsset, TAssetDraftInput, TQuery } from '../../types/generated/ctp';
 import AssetsEdit from '../assets-edit';
-import AssetsSortableList from '../assets-sortable-list';
 import { ApolloQueryResult } from '@apollo/client';
 
 type Props = {
@@ -33,7 +31,6 @@ type Props = {
     asset: TAsset
   ) => Promise<void>;
   onCreate: (draft: TAssetDraftInput) => Promise<void>;
-  onSortFinish: (reordered: Array<TAsset>) => Promise<void>;
   onDelete: (assets: Array<TAsset>) => Promise<void>;
   assets: Array<TAsset>;
   refetch: () => Promise<ApolloQueryResult<TQuery>>;
@@ -43,7 +40,6 @@ const AssetsList: FC<Props> = ({
   assets,
   onEdit,
   onCreate,
-  onSortFinish,
   onDelete,
   refetch,
 }) => {
@@ -51,7 +47,6 @@ const AssetsList: FC<Props> = ({
 
   const [isAddAssetOpen, setIsAddAssetOpen] = useState(false);
   const [isEditAssetOpen, setIsEditAssetOpen] = useState(false);
-  const [isReorder, setIsReorder] = useState(false);
   const [asset, setAsset] = useState<TAsset | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
@@ -100,28 +95,10 @@ const AssetsList: FC<Props> = ({
                   isDisabled={selectedAssets.length === 0}
                   value={selectedAction}
                 />
-                <SecondaryButton
-                  iconLeft={<DragDropIcon />}
-                  label={intl.formatMessage(
-                    messages.reorderAttributesButtonLabel
-                  )}
-                  isToggleButton={true}
-                  isToggled={isReorder}
-                  onClick={() => setIsReorder(!isReorder)}
-                />
               </Spacings.Inline>
             </Spacings.Inline>
-            {assets.length > 0 && isReorder && (
-              <AssetsSortableList
-                items={assets}
-                onClose={async () => {
-                  await refetch();
-                  setIsReorder(false);
-                }}
-                onSortFinish={onSortFinish}
-              />
-            )}
-            {assets.length > 0 && !isReorder && (
+
+            {assets.length > 0 && (
               <AssetTable
                 items={assets}
                 onSelectionChange={setSelectedAssets}

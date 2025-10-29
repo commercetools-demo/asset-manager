@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { SortableContainer } from 'react-sortable-hoc';
 import { TAsset } from '../../types/generated/ctp';
 import Grid from '@commercetools-uikit/grid';
 import AssetsSortGridItem from '../assets-sort-grid-item/assets-sort-grid-item';
@@ -26,4 +25,4 @@ const AssetsSortGrid: FC<Props> = ({ listType, itemPerRow, items }) => {
   );
 };
 
-export default SortableContainer(AssetsSortGrid);
+export default AssetsSortGrid;

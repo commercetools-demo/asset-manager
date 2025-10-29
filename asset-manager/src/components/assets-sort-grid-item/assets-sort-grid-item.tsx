@@ -1,4 +1,3 @@
-import { SortableElement } from 'react-sortable-hoc';
 import { TAsset } from '../../types/generated/ctp';
 import Card from '@commercetools-uikit/card';
 import { FC } from 'react';
@@ -95,4 +94,4 @@ const AssetsSortGridItem: FC<Props> = ({ value }) => {
   );
 };
 
-export default SortableElement(AssetsSortGridItem);
+export default AssetsSortGridItem;

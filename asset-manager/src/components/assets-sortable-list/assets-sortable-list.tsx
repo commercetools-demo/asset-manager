@@ -1,5 +1,4 @@
 import { FC, useState } from 'react';
-import { arrayMove, SortEndHandler } from 'react-sortable-hoc';
 import { TAsset } from '../../types/generated/ctp';
 import AssetsSortGrid from '../assets-sort-grid/assets-sort-grid';
 import Spacings from '@commercetools-uikit/spacings';
@@ -53,34 +52,7 @@ export const AssetsSortableList: FC<Props> = ({
       }
     }
   };
-  const handleSortEnd: SortEndHandler = ({ oldIndex, newIndex }) => {
-    if (oldIndex === newIndex) return;
 
-    let listWithMovedProducts = arrayMove(
-      reorderedProducts,
-      oldIndex,
-      newIndex
-    );
-
-    listWithMovedProducts[newIndex] = {
-      ...listWithMovedProducts[newIndex],
-      isMoved: true,
-    };
-
-    function checkAndUpdateIsMovedProperty(
-      products: Array<TAsset & { isMoved?: boolean }>
-    ) {
-      return products.map((product, index) => {
-        if (product.isMoved) {
-          const isMovedToOriginalPosition = product.id === items[index].id;
-          return { ...product, isMoved: !isMovedToOriginalPosition };
-        }
-        return product;
-      });
-    }
-
-    setReorderedProducts(checkAndUpdateIsMovedProperty(listWithMovedProducts));
-  };
   return (
     <>
       <Spacings.Inline
@@ -98,8 +70,6 @@ export const AssetsSortableList: FC<Props> = ({
         />
       </Spacings.Inline>
       <AssetsSortGrid
-        onSortEnd={handleSortEnd}
-        axis="xy"
         items={reorderedProducts}
         itemPerRow={2}
         listType={'list'}
