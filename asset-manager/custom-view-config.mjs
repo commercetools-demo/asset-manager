@@ -7,7 +7,7 @@ const config = {
   cloudIdentifier: '${env:CLOUD_IDENTIFIER}',
   env: {
     development: {
-      initialProjectKey: 'tech-sales-manufacturing-store',
+      initialProjectKey: '${env:INITIAL_PROJECT_KEY}',
       hostUriPath:
         '/tech-sales-manufacturing-store/products/b12eb265-c174-4900-adc8-4aab0ec0ca5f/variants/1/images',
     },
