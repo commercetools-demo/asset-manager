@@ -15,6 +15,7 @@ import Card from '@commercetools-uikit/card';
 import AssetsSourcesForm, {
   OnChangeValue,
 } from '../assets-sources-form/assets-sources-form';
+import { CmsAuthProvider } from '../../contexts/cms-auth-context';
 import TextInput from '@commercetools-uikit/text-input';
 type Formik = ReturnType<typeof useFormik>;
 
@@ -164,6 +165,7 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
   };
 
   const formElements = (
+    <CmsAuthProvider>
     <FormikProvider value={formik}>
       <Spacings.Stack scale="m">
         <Grid
@@ -229,6 +231,7 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
         />
       </Spacings.Stack>
     </FormikProvider>
+    </CmsAuthProvider>
   );
   return children({
     formElements,

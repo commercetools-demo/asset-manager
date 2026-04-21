@@ -12,6 +12,7 @@ export const columnDefinitions = [
     key: 'uri',
     label: <FormattedMessage {...messages.tableHeaderLabelUri} />,
     isSortable: false,
+    isTruncated: true
   },
   {
     key: 'width',

@@ -8,8 +8,8 @@ import messages from './messages';
 import IconButton from '@commercetools-uikit/icon-button';
 import { FC, Fragment } from 'react';
 import TextInput from '@commercetools-uikit/text-input';
+import Text from '@commercetools-uikit/text';
 import { useFormik } from 'formik';
-
 import { ErrorMessage } from '@commercetools-uikit/messages';
 import {
   AssetSource,
@@ -19,6 +19,8 @@ import {
 import { columnDefinitions } from './utils';
 import NumberInput from '@commercetools-uikit/number-input';
 import { TColumn } from '@commercetools-uikit/data-table/dist/declarations/src/data-table';
+import { useCmsAuth } from '../../contexts/cms-auth-context';
+import { AddNewSourceWithPuckImagePicker } from '../add-new-source-with-puck-image-picker';
 
 type RowItem = { index: number; absoluteIndex?: number } & TRow & AssetSource;
 
@@ -52,6 +54,7 @@ export const AssetsSourcesForm: FC<Props> = ({
   isDisabled,
 }) => {
   const intl = useIntl();
+  const { jwtToken } = useCmsAuth();
 
   const renderErrors = (keys: Array<string>) => {
     return keys.map((key) => {
@@ -64,13 +67,9 @@ export const AssetsSourcesForm: FC<Props> = ({
     });
   };
 
-  const handleAddEnumClick = () => {
-    onAddEnumValue(emptyRow);
-  };
-
   const items: Array<AssetSource> =
     !formik.values.sources || formik.values.sources.length === 0
-      ? [emptyRow]
+      ? []
       : formik.values.sources;
 
   const rows = items.map(
@@ -125,9 +124,34 @@ export const AssetsSourcesForm: FC<Props> = ({
           </Fragment>
         );
       }
+      case 'uri':
+        if (jwtToken) {
+          return (
+            <Text.Body truncate title={row.uri || ''}>
+              {row.uri || ''}
+            </Text.Body>
+          );
+        }
+        return (
+          <Fragment>
+            <TextInput
+              value={row.uri || ''}
+              name={nameAttribute}
+              onChange={(event) => {
+                onChangeValue('uri', event.target.value, row.absoluteIndex || 0);
+              }}
+              isDisabled={isDisabled}
+              hasError={error?.uri !== undefined}
+            />
+            {error?.uri !== undefined && (
+              <ErrorMessage>
+                {renderErrors(Object.keys(error.uri))}
+              </ErrorMessage>
+            )}
+          </Fragment>
+        );
       case 'contentType':
       case 'key':
-      case 'uri':
         return (
           <Fragment>
             <TextInput
@@ -156,6 +180,20 @@ export const AssetsSourcesForm: FC<Props> = ({
     }
   };
 
+  const footer = jwtToken ? (
+    <AddNewSourceWithPuckImagePicker
+      isDisabled={isDisabled}
+      onConfirm={(uri) => onAddEnumValue({ ...emptyRow, uri })}
+    />
+  ) : (
+    <SecondaryButton
+      iconLeft={<PlusBoldIcon />}
+      label={intl.formatMessage(messages.addEnumButtonLabel)}
+      onClick={() => onAddEnumValue(emptyRow)}
+      isDisabled={isDisabled}
+    />
+  );
+
   return (
     <Spacings.Stack scale="m">
       <Constraints.Horizontal max="scale">
@@ -163,15 +201,8 @@ export const AssetsSourcesForm: FC<Props> = ({
           columns={columnDefinitions}
           rows={rows}
           itemRenderer={itemRenderer}
-          footer={
-            <SecondaryButton
-              iconLeft={<PlusBoldIcon />}
-              label={intl.formatMessage(messages.addEnumButtonLabel)}
-              onClick={handleAddEnumClick}
-              isDisabled={isDisabled}
-            />
-          }
-        ></DataTable>
+          footer={footer}
+        />
       </Constraints.Horizontal>
     </Spacings.Stack>
   );

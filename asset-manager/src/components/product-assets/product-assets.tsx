@@ -13,10 +13,8 @@ import Text from '@commercetools-uikit/text';
 import Spacings from '@commercetools-uikit/spacings';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import messages from '../assets-list/messages';
-import {
-  useProductFetcher,
-  useProductUpdater,
-} from 'commercetools-demo-shared-data-fetching-hooks';
+import { useProductFetcher } from 'commercetools-demo-shared-data-fetching-hooks';
+import { useProductUpdater } from '../../hooks/use-product-updater';
 const syncProducts = createSyncProducts();
 
 type Props = { productId: string; variantId: number };

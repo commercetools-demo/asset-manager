@@ -1135,6 +1135,11 @@
     "@babel/runtime" "^7.17.9"
     "@babel/runtime-corejs3" "^7.17.9"
 
+"@commercetools-demo/puck-image-picker@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@commercetools-demo/puck-image-picker/-/puck-image-picker-0.2.2.tgz#33065c96063c450f2dee308b8e316203f6e54f78"
+  integrity sha512-YEYSjRQBU69OPUIAWuFj23PYjdz2IWk7eDlAYHSmumAtZCHaCMPZhlmASh/ripXDZDVVUo7ksZRZF2Zg6U14Jg==
+
 "@commercetools-frontend/actions-global@24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@commercetools-frontend/actions-global/-/actions-global-24.9.0.tgz#b3325ca7915883a573e78446b4660c411ab54227"

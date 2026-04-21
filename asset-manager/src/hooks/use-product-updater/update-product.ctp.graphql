@@ -1,0 +1,51 @@
+fragment AssetFragmentLocal on Asset {
+  id
+  key
+  nameAllLocales {
+    locale
+    value
+  }
+  descriptionAllLocales {
+    locale
+    value
+  }
+  sources {
+    key
+    uri
+    contentType
+    dimensions {
+      width
+      height
+    }
+  }
+}
+
+fragment VariantFragmentLocal on ProductVariant {
+  id
+  assets @include(if: $includeAssets) {
+    ...AssetFragmentLocal
+  }
+}
+
+mutation UpdateProduct(
+  $id: String
+  $key: String
+  $version: Long!
+  $actions: [ProductUpdateAction!]!
+  $includeAssets: Boolean = false
+) {
+  updateProduct(id: $id, key: $key, version: $version, actions: $actions) {
+    id
+    version
+    masterData {
+      current {
+        masterVariant {
+          ...VariantFragmentLocal
+        }
+        variants {
+          ...VariantFragmentLocal
+        }
+      }
+    }
+  }
+}
