@@ -11,6 +11,7 @@ module.exports = [
       'build/',
       'coverage/',
       'src/types/generated/',
+      'scripts/screenshots/',
     ],
   },
   ...mcAppConfig,
