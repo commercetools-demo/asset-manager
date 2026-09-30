@@ -11,8 +11,7 @@ import { createSyncProducts } from '@commercetools/sync-actions';
 import { FormattedMessage } from 'react-intl';
 import { Alert, LoadingSpinner, Stack } from '@commercetools/nimbus';
 import messages from '../assets-list/messages';
-import { useProductFetcher } from 'commercetools-demo-shared-data-fetching-hooks';
-import { useProductUpdater } from '../../hooks/use-product-updater';
+import { useProductFetcher, useProductUpdater } from '../../hooks';
 const syncProducts = createSyncProducts();
 
 type Props = { productId: string; variantId: number };
@@ -22,7 +21,6 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   const { loading, error, product, refetch } = useProductFetcher({
     id: productId,
-    includeAssets: true,
   });
 
   if (error) {

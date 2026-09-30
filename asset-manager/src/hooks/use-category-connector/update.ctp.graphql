@@ -1,0 +1,40 @@
+fragment CategoryAssetFragment on Asset {
+  id
+  key
+  nameAllLocales {
+    locale
+    value
+  }
+  descriptionAllLocales {
+    locale
+    value
+  }
+  sources {
+    key
+    uri
+    contentType
+    dimensions {
+      width
+      height
+    }
+  }
+}
+
+fragment CategoryAssetsFragment on Category {
+  id
+  key
+  version
+  assets {
+    ...CategoryAssetFragment
+  }
+}
+
+mutation UpdateCategory(
+  $id: String
+  $version: Long!
+  $actions: [CategoryUpdateAction!]!
+) {
+  updateCategory(id: $id, version: $version, actions: $actions) {
+    ...CategoryAssetsFragment
+  }
+}

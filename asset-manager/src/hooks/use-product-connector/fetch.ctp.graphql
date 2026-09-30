@@ -1,0 +1,47 @@
+fragment ProductAssetFragment on Asset {
+  id
+  key
+  nameAllLocales {
+    locale
+    value
+  }
+  descriptionAllLocales {
+    locale
+    value
+  }
+  sources {
+    key
+    uri
+    contentType
+    dimensions {
+      width
+      height
+    }
+  }
+}
+
+fragment ProductVariantAssetsFragment on ProductVariant {
+  id
+  sku
+  key
+  assets {
+    ...ProductAssetFragment
+  }
+}
+
+query FetchProduct($id: String) {
+  product(id: $id) {
+    id
+    version
+    masterData {
+      current {
+        masterVariant {
+          ...ProductVariantAssetsFragment
+        }
+        variants {
+          ...ProductVariantAssetsFragment
+        }
+      }
+    }
+  }
+}

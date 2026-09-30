@@ -33,8 +33,11 @@ slate, slate-dom, slate-history, slate-hyperscript, slate-react
 ## Regenerating Chakra's styled-system types
 
 ```
-npm run chakra:typegen
+npm run generate-types:chakra
 ```
+
+This also runs automatically as a `postinstall` hook, so a fresh install or
+dependency bump regenerates the types.
 
 **Do not run `npx @chakra-ui/cli typegen ...`** — `npx` fetches an isolated
 copy that can't see this project's `node_modules` and always fails with
@@ -93,3 +96,24 @@ unused drag-and-drop reorder components (`assets-sortable-list`,
 `assets-sort-grid`, `assets-sort-grid-item`) — dead since reordering was
 removed — were deleted rather than migrated, along with the `onSortFinish`
 handlers still being passed to `AssetsList`.
+
+## Data fetching and generated types
+
+The hooks previously imported from `commercetools-demo-shared-data-fetching-hooks`
+(`useProductFetcher`, `useCategoryFetcher`, `useCategoryUpdater`) are inlined
+into `src/hooks/use-product-connector` and `src/hooks/use-category-connector`,
+using `useMcQuery`/`useMcMutation` with `.ctp.graphql` documents. Result types
+are hand-narrowed to the fragment shape instead of the full generated
+`TQuery`/`TProduct` types, which are recursive enough to hit TypeScript's
+instantiation depth limit (TS2589).
+
+`npm run generate-types:ctp` regenerates `schemas/ctp.json` and
+`src/types/generated/ctp.ts`: `scripts/login.js` logs into the Merchant Center
+(needs `CLOUD_IDENTIFIER` and `CTP_PROJECT_KEY` in `.env`/`.env.local`) and
+`scripts/load-env.js` reads the token back out of
+`~/.commercetools/mc-credentials.json`.
+
+`package.json` `overrides` force every nested `react`/`react-dom`/`@apollo/client`
+to the root version: with `legacy-peer-deps=true`, npm otherwise silently nests
+private copies under packages whose peer ranges don't cover React 19, which
+crashes at runtime with duplicate-React errors.

@@ -7,9 +7,8 @@ import DeleteAsset from '../assets-delete';
 import AssetTable from '../assets-table';
 import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create';
-import { TAsset, TAssetDraftInput, TQuery } from '../../types/generated/ctp';
+import { TAsset, TAssetDraftInput } from '../../types/generated/ctp';
 import AssetsEdit from '../assets-edit';
-import { ApolloQueryResult } from '@apollo/client';
 
 type Props = {
   onEdit: (
@@ -30,7 +29,7 @@ type Props = {
   onCreate: (draft: TAssetDraftInput) => Promise<void>;
   onDelete: (assets: Array<TAsset>) => Promise<void>;
   assets: Array<TAsset>;
-  refetch: () => Promise<ApolloQueryResult<TQuery>>;
+  refetch: () => Promise<unknown>;
 };
 
 const AssetsList: FC<Props> = ({

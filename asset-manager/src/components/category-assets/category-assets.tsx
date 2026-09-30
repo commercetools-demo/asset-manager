@@ -11,10 +11,7 @@ import { createSyncCategories } from '@commercetools/sync-actions';
 import { FormattedMessage } from 'react-intl';
 import { Alert, LoadingSpinner, Stack } from '@commercetools/nimbus';
 import messages from '../assets-list/messages';
-import {
-  useCategoryFetcher,
-  useCategoryUpdater,
-} from 'commercetools-demo-shared-data-fetching-hooks';
+import { useCategoryFetcher, useCategoryUpdater } from '../../hooks';
 const syncCategories = createSyncCategories();
 
 type Props = { categoryId: string };
@@ -24,7 +21,6 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
 
   const { loading, error, category, refetch } = useCategoryFetcher({
     id: categoryId,
-    includeAssets: true,
   });
 
   if (error) {
