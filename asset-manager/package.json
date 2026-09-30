@@ -98,15 +98,15 @@
     "redux": "4.2.1",
     "typescript": "5.0.4"
   },
-  "resolutions": {
+  "overrides": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@types/eslint": "<9",
-    "@types/react-router": "<6",
-    "@types/react-router-dom": "<6",
+    "@types/react-router": "$@types/react-router",
+    "@types/react-router-dom": "$@types/react-router-dom",
     "headers-polyfill": "3.2.5",
     "nwsapi": "2.2.7"
   },
   "devDependencies": {},
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "npm@10.9.2"
 }
