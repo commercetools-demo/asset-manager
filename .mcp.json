@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "nimbus": {
+      "command": "npx",
+      "args": ["-y", "@commercetools/nimbus-mcp"]
+    },
+    "commercetools-developer": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://docs.commercetools.com/apis/mcp"]
+    }
+  }
+}
