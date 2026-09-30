@@ -12,3 +12,4 @@ coverage
 .vscode
 .idea
 build/
+asset-manager/public/
