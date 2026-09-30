@@ -104,6 +104,7 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
       masterVariant: {
         sku: variant?.sku,
         id: variant?.id,
+        key: variant?.key,
         assets: [
           // new image
           {
