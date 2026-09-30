@@ -22,9 +22,10 @@ export const useSharedJwtTokenFetcher = (): {
   let jwtToken: string | undefined;
   if (value) {
     try {
-      jwtToken = typeof value === 'string' && value.startsWith('"')
-        ? JSON.parse(value)
-        : value;
+      jwtToken =
+        typeof value === 'string' && value.startsWith('"')
+          ? JSON.parse(value)
+          : value;
     } catch {
       jwtToken = value;
     }

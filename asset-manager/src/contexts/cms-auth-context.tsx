@@ -23,7 +23,9 @@ interface CmsAuthContextValue {
   refreshJwt: () => Promise<void>;
 }
 
-const CmsAuthContext = createContext<CmsAuthContextValue | undefined>(undefined);
+const CmsAuthContext = createContext<CmsAuthContextValue | undefined>(
+  undefined
+);
 
 const getBaseUrl = (url: string) => url.replace(/\/$/, '');
 
@@ -32,9 +34,9 @@ export const CmsAuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [jwtToken, setJwtTokenState] = useState<string | null>(null);
 
-  const { environment } = useApplicationContext(
-    (ctx) => ({ environment: ctx.environment as { CMS_API_URL?: string } })
-  );
+  const { environment } = useApplicationContext((ctx) => ({
+    environment: ctx.environment as { CMS_API_URL?: string },
+  }));
   const baseUrl = getBaseUrl(environment?.CMS_API_URL ?? '');
 
   const { jwtToken: fetchedToken, loading: fetchLoading } =
@@ -112,6 +114,7 @@ export const CmsAuthProvider: React.FC<{ children: ReactNode }> = ({
 
 export const useCmsAuth = (): CmsAuthContextValue => {
   const context = useContext(CmsAuthContext);
-  if (!context) throw new Error('useCmsAuth must be used within CmsAuthProvider');
+  if (!context)
+    throw new Error('useCmsAuth must be used within CmsAuthProvider');
   return context;
 };

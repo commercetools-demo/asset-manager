@@ -1,8 +1,8 @@
 import omitEmpty from 'omit-empty-es';
 
 const transformErrors = (apiErrors: unknown) => {
-  const formErrors: Array<any> = [];
-  const unmappedErrors: Array<any> = [];
+  const formErrors: Array<unknown> = [];
+  const unmappedErrors: Array<unknown> = [];
 
   if (!Array.isArray(apiErrors))
     return {

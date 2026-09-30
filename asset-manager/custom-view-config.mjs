@@ -35,8 +35,8 @@ const config = {
   },
   headers: {
     csp: {
-      'connect-src': ['*.us-central1.run.app']
-    }
+      'connect-src': ['*.us-central1.run.app'],
+    },
   },
   locators: [
     'products.product_variant_details.general',
