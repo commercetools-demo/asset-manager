@@ -8,10 +8,8 @@ import {
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
 import { createSyncProducts } from '@commercetools/sync-actions';
-import { ContentNotification } from '@commercetools-uikit/notifications';
-import Text from '@commercetools-uikit/text';
-import Spacings from '@commercetools-uikit/spacings';
-import LoadingSpinner from '@commercetools-uikit/loading-spinner';
+import { FormattedMessage } from 'react-intl';
+import { Alert, LoadingSpinner, Stack } from '@commercetools/nimbus';
 import messages from '../assets-list/messages';
 import { useProductFetcher } from 'commercetools-demo-shared-data-fetching-hooks';
 import { useProductUpdater } from '../../hooks/use-product-updater';
@@ -29,24 +27,26 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   if (error) {
     return (
-      <ContentNotification type="error">
-        <Text.Body>{getErrorMessage(error)}</Text.Body>
-      </ContentNotification>
+      <Alert.Root colorPalette="critical">
+        <Alert.Description>{getErrorMessage(error)}</Alert.Description>
+      </Alert.Root>
     );
   }
   if (loading) {
     return (
-      <Spacings.Stack alignItems="center">
+      <Stack direction="column" align="center">
         <LoadingSpinner />
-      </Spacings.Stack>
+      </Stack>
     );
   }
 
   if (!product) {
     return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
+      <Alert.Root colorPalette="info">
+        <Alert.Description>
+          <FormattedMessage {...messages.noResults} />
+        </Alert.Description>
+      </Alert.Root>
     );
   }
 
@@ -58,9 +58,11 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   if (!loading && !variant) {
     return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
+      <Alert.Root colorPalette="info">
+        <Alert.Description>
+          <FormattedMessage {...messages.noResults} />
+        </Alert.Description>
+      </Alert.Root>
     );
   }
   const onEdit = async (
@@ -151,41 +153,10 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
       }),
     });
   };
-  const onSortFinish = async (reordered: Array<TAsset>) => {
-    const before = {
-      masterVariant: {
-        sku: variant?.sku,
-        id: variant?.id,
-        key: variant?.key,
-        assets: variant?.assets.map((asset) => {
-          return { id: asset.id };
-        }),
-      },
-    };
-    const now = {
-      masterVariant: {
-        sku: variant?.sku,
-        id: variant?.id,
-        key: variant?.key,
-        assets: reordered.map((asset) => {
-          return { id: asset.id };
-        }),
-      },
-    };
-    const actions = syncProducts.buildActions(now, before);
-    await productUpdater.execute({
-      id: productId,
-      version: product.version,
-      actions: createGraphQlUpdateActions(actions, {
-        staged: false,
-      }),
-    });
-  };
   return (
     <Assets
       onCreate={onCreate}
       onEdit={onEdit}
-      onSortFinish={onSortFinish}
       onDelete={onDelete}
       assets={variant?.assets || []}
       refetch={refetch}

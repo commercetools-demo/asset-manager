@@ -17,14 +17,9 @@ export default defineMessages({
     id: 'Assets.add',
     defaultMessage: 'Add an asset',
   },
-  actions: {
-    id: 'Assets.actions',
-    defaultMessage: 'Actions',
-  },
-  reorderAttributesButtonLabel: {
-    id: 'Products.VariantsDetailAttributes.reorderAttributesButtonLabel',
-    description: 'Label for the attributes reorder button',
-    defaultMessage: 'Reorder fields',
+  delete: {
+    id: 'Assets.delete',
+    defaultMessage: 'Delete',
   },
   createSuccess: {
     id: 'AddAsset.form.message.success',

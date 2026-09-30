@@ -2,21 +2,20 @@ import { FC, ReactElement } from 'react';
 import { FormikProvider, useFormik } from 'formik';
 import omitEmpty from 'omit-empty-es';
 import { FormikConfig } from 'formik/dist/types';
-import LocalizedTextField from '@commercetools-uikit/localized-text-field';
-import TextField from '@commercetools-uikit/text-field';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
-import Spacings from '@commercetools-uikit/spacings';
+import {
+  Card,
+  Grid,
+  LocalizedField,
+  Stack,
+  TextInputField,
+} from '@commercetools/nimbus';
 import messages from './messages';
-import Grid from '@commercetools-uikit/grid';
-import { designTokens } from '@commercetools-uikit/design-system';
-import Card from '@commercetools-uikit/card';
 import AssetsSourcesForm, {
   OnChangeValue,
 } from '../assets-sources-form/assets-sources-form';
 import { CmsAuthProvider } from '../../contexts/cms-auth-context';
-import TextInput from '@commercetools-uikit/text-input';
 type Formik = ReturnType<typeof useFormik>;
 
 export type AssetSource = {
@@ -46,6 +45,7 @@ export type TSourceErrors = { [key: number]: TSourceError };
 
 type TErrors = {
   name: { missing?: boolean };
+  description?: Record<string, boolean>;
   key: { invalidInput?: boolean };
   sources: TSourceErrors;
 };
@@ -77,7 +77,7 @@ const validate = (formikValues: TFormValues) => {
       errors.key.invalidInput = true;
   }
 
-  if (LocalizedTextInput.isEmpty(formikValues.name)) {
+  if (LocalizedField.isEmpty(formikValues.name)) {
     errors.name.missing = true;
   }
 
@@ -89,7 +89,7 @@ const validate = (formikValues: TFormValues) => {
       key: {},
       contentType: {},
     };
-    if (!item.uri || TextInput.isEmpty(item.uri)) {
+    if (!item.uri || item.uri.trim().length === 0) {
       sourceError.uri.missing = true;
     }
     if (item.width && !item.height) {
@@ -119,7 +119,7 @@ type FormProps = {
 type Props = {
   onSubmit: FormikConfig<TFormValues>['onSubmit'];
   initialValues: TFormValues;
-  children: (formProps: FormProps) => JSX.Element;
+  children: (formProps: FormProps) => ReactElement;
 };
 
 export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
@@ -164,73 +164,76 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
     formik.setFieldTouched(`sources.${absoluteIndex}.${field}`, true);
   };
 
+  const errors = formik.errors as unknown as Partial<TErrors>;
+
   const formElements = (
     <CmsAuthProvider>
-    <FormikProvider value={formik}>
-      <Spacings.Stack scale="m">
-        <Grid
-          gridTemplateColumns={`repeat(2, ${designTokens.constraint11})`}
-          gridGap={designTokens.spacingM}
-        >
-          <Grid.Item>
-            <Card type="flat" insetScale="s">
-              <LocalizedTextField
-                name="name"
-                title={intl.formatMessage(messages.name)}
-                value={formik.values.name || ''}
-                selectedLanguage={dataLocale}
-                isRequired
-                errors={
-                  LocalizedTextField.toFieldErrors<TFormValues>(formik.errors)
-                    .name
-                }
-                touched={!!formik.touched.name}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-              />
-            </Card>
-          </Grid.Item>
-          <Grid.Item>
-            <Card type="flat" insetScale="s">
-              <LocalizedTextField
-                name="description"
-                title={intl.formatMessage(messages.description)}
-                value={formik.values.description}
-                selectedLanguage={dataLocale}
-                errors={
-                  LocalizedTextField.toFieldErrors<TFormValues>(formik.errors)
-                    .description
-                }
-                touched={!!formik.touched.description}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-            </Card>
-          </Grid.Item>
-          <Grid.Item>
-            <Card type="flat" insetScale="s">
-              <TextField
-                name="key"
-                value={formik.values.key || ''}
-                title={intl.formatMessage(messages.keyTitle)}
-                hint={intl.formatMessage(messages.keyHint)}
-                errors={TextField.toFieldErrors<TFormValues>(formik.errors).key}
-                touched={!!formik.touched.key}
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                renderError={renderKeyInputErrors}
-              />
-            </Card>
-          </Grid.Item>
-        </Grid>
-        <AssetsSourcesForm
-          formik={formik}
-          onAddEnumValue={handleAddEnumValue}
-          onChangeValue={handleChangeEnumValue}
-          onRemoveValue={handleRemoveEnumValue}
-        />
-      </Spacings.Stack>
-    </FormikProvider>
+      <FormikProvider value={formik}>
+        <Stack direction="column" gap="400">
+          <Grid templateColumns="repeat(2, minmax(0, 1fr))" gap="400">
+            <Card.Root variant="outlined" size="sm">
+              <Card.Body>
+                <LocalizedField
+                  name="name"
+                  label={intl.formatMessage(messages.name)}
+                  valuesByLocaleOrCurrency={formik.values.name || {}}
+                  defaultLocaleOrCurrency={dataLocale}
+                  isRequired
+                  errors={errors.name}
+                  touched={!!formik.touched.name}
+                  onBlur={() => formik.setFieldTouched('name', true)}
+                  onChange={(event) =>
+                    formik.setFieldValue(
+                      `name.${event.target.locale}`,
+                      event.target.value
+                    )
+                  }
+                />
+              </Card.Body>
+            </Card.Root>
+            <Card.Root variant="outlined" size="sm">
+              <Card.Body>
+                <LocalizedField
+                  name="description"
+                  label={intl.formatMessage(messages.description)}
+                  valuesByLocaleOrCurrency={formik.values.description}
+                  defaultLocaleOrCurrency={dataLocale}
+                  errors={errors.description}
+                  touched={!!formik.touched.description}
+                  onBlur={() => formik.setFieldTouched('description', true)}
+                  onChange={(event) =>
+                    formik.setFieldValue(
+                      `description.${event.target.locale}`,
+                      event.target.value
+                    )
+                  }
+                />
+              </Card.Body>
+            </Card.Root>
+            <Card.Root variant="outlined" size="sm">
+              <Card.Body>
+                <TextInputField
+                  name="key"
+                  value={formik.values.key || ''}
+                  label={intl.formatMessage(messages.keyTitle)}
+                  description={intl.formatMessage(messages.keyHint)}
+                  errors={errors.key}
+                  touched={!!formik.touched.key}
+                  onBlur={() => formik.setFieldTouched('key', true)}
+                  onChange={(value) => formik.setFieldValue('key', value)}
+                  renderError={renderKeyInputErrors}
+                />
+              </Card.Body>
+            </Card.Root>
+          </Grid>
+          <AssetsSourcesForm
+            formik={formik}
+            onAddEnumValue={handleAddEnumValue}
+            onChangeValue={handleChangeEnumValue}
+            onRemoveValue={handleRemoveEnumValue}
+          />
+        </Stack>
+      </FormikProvider>
     </CmsAuthProvider>
   );
   return children({

@@ -3,6 +3,7 @@ import {
   CustomViewShell,
   setupGlobalErrorListener,
 } from '@commercetools-frontend/application-shell';
+import { NimbusProvider, NimbusI18nProvider } from '@commercetools/nimbus';
 import loadMessages from '../../load-messages';
 
 // Here we split up the main (app) bundle with the actual application business logic.
@@ -17,9 +18,13 @@ const AsyncApplicationRoutes = lazy(
 setupGlobalErrorListener();
 
 const EntryPoint = () => (
-  <CustomViewShell applicationMessages={loadMessages}>
-    <AsyncApplicationRoutes />
-  </CustomViewShell>
+  <NimbusProvider>
+    <NimbusI18nProvider locale="en-US">
+      <CustomViewShell applicationMessages={loadMessages}>
+        <AsyncApplicationRoutes />
+      </CustomViewShell>
+    </NimbusI18nProvider>
+  </NimbusProvider>
 );
 
 EntryPoint.displayName = 'EntryPoint';

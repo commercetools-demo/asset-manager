@@ -4,8 +4,8 @@ import {
   useModalState,
 } from '@commercetools-frontend/application-components';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import SecondaryButton from '@commercetools-uikit/secondary-button';
-import { PlusBoldIcon } from '@commercetools-uikit/icons';
+import { Button } from '@commercetools/nimbus';
+import { Add } from '@commercetools/nimbus-icons';
 import {
   ImagePickerField,
   ImagePickerProvider,
@@ -43,12 +43,15 @@ export const AddNewSourceWithPuckImagePicker = ({
 
   return (
     <>
-      <SecondaryButton
-        iconLeft={<PlusBoldIcon />}
-        label="Add new source"
-        onClick={openModal}
+      <Button
+        variant="outline"
+        colorPalette="primary"
+        onPress={openModal}
         isDisabled={isDisabled}
-      />
+      >
+        <Add />
+        Add new source
+      </Button>
 
       <FormModalPage
         title="Add new source"

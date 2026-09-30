@@ -2,9 +2,8 @@ import {
   ConfirmationDialog,
   useModalState,
 } from '@commercetools-frontend/application-components';
-import Spacings from '@commercetools-uikit/spacings';
 import { FC, useCallback, useEffect } from 'react';
-import Text from '@commercetools-uikit/text';
+import { Text } from '@commercetools/nimbus';
 import messages from './messages';
 import { useIntl } from 'react-intl';
 import { TAsset } from '../../types/generated/ctp';
@@ -69,13 +68,11 @@ const AssetsDelete: FC<Props> = ({ onClose, selectedAssets, onDelete }) => {
       onCancel={confirmationModalState.closeModal}
       onConfirm={handleConfirm}
     >
-      <Spacings.Stack scale="m">
-        <Text.Body>
-          {intl.formatMessage(messages.title, {
-            number: selectedAssets.length,
-          })}
-        </Text.Body>
-      </Spacings.Stack>
+      <Text>
+        {intl.formatMessage(messages.title, {
+          number: selectedAssets.length,
+        })}
+      </Text>
     </ConfirmationDialog>
   );
 };

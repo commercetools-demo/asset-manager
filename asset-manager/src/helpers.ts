@@ -7,6 +7,7 @@ import {
   TAddAssetActionPayload,
 } from './types';
 import { transformLocalizedStringToLocalizedField } from '@commercetools-frontend/l10n';
+import { LocalizedField } from '@commercetools/nimbus';
 
 export const getErrorMessage = (error: ApolloError) =>
   error.graphQLErrors?.map((e) => e.message).join('\n') || error.message;
@@ -124,3 +125,20 @@ export const createGraphQlUpdateActions = (
     []
   );
 };
+
+export const omitEmptyTranslations = (
+  localizedString: Record<string, string>
+) =>
+  LocalizedField.omitEmptyTranslations(localizedString) as Record<
+    string,
+    string
+  >;
+
+export const createLocalizedString = (
+  locales: string[],
+  existingLocalizedString: Record<string, string>
+) =>
+  LocalizedField.createLocalizedString(
+    locales,
+    existingLocalizedString
+  ) as Record<string, string>;

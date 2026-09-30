@@ -1,12 +1,9 @@
-import { useIntl } from 'react-intl';
-import Spacings from '@commercetools-uikit/spacings';
-import Text from '@commercetools-uikit/text';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Button, Heading, Stack } from '@commercetools/nimbus';
+import { Add, Delete } from '@commercetools/nimbus-icons';
 import messages from './messages';
-import PrimaryButton from '@commercetools-uikit/primary-button';
-import { PlusThinIcon } from '@commercetools-uikit/icons';
 import { FC, useState } from 'react';
 import DeleteAsset from '../assets-delete';
-import SelectField from '@commercetools-uikit/select-field';
 import AssetTable from '../assets-table';
 import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create';
@@ -50,69 +47,52 @@ const AssetsList: FC<Props> = ({
   const [asset, setAsset] = useState<TAsset | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
-  const [selectedAction, setSelectedAction] = useState<'delete'>();
 
   return (
     <InfoMainPage
       customTitleRow={
-        <Spacings.Inline justifyContent="space-between">
-          <Text.Headline as="h2">
+        <Stack direction="row" justify="space-between" align="center">
+          <Heading as="h2" size="lg">
             {intl.formatMessage(messages.title)}
-          </Text.Headline>
-          <Spacings.Inline justifyContent="space-between">
-            <PrimaryButton
-              iconLeft={<PlusThinIcon />}
-              label={intl.formatMessage(messages.addAsset)}
-              onClick={() => setIsAddAssetOpen(true)}
-              isDisabled={false}
-            />
-          </Spacings.Inline>
-        </Spacings.Inline>
+          </Heading>
+          <Button
+            variant="solid"
+            colorPalette="primary"
+            onPress={() => setIsAddAssetOpen(true)}
+          >
+            <Add />
+            {intl.formatMessage(messages.addAsset)}
+          </Button>
+        </Stack>
       }
     >
-      <Spacings.Stack scale="xl">
+      <Stack direction="column" gap="800">
         {assets.length > 0 ? (
-          <Spacings.Stack scale="xs" alignItems="stretch">
-            <Spacings.Inline
-              alignItems="flex-start"
-              justifyContent="space-between"
-            >
-              <Spacings.Inline
-                scale="s"
-                justifyContent={'center'}
-                alignItems={'flex-end'}
+          <Stack direction="column" gap="100" align="stretch">
+            <Stack direction="row" justify="flex-start">
+              <Button
+                variant="outline"
+                colorPalette="critical"
+                isDisabled={selectedAssets.length === 0}
+                onPress={() => setIsDeleteAssetOpen(true)}
               >
-                <SelectField
-                  name={'actions'}
-                  title={''}
-                  horizontalConstraint={5}
-                  placeholder={'Actions'}
-                  options={[{ value: 'delete', label: 'Delete' }]}
-                  onChange={(event) => {
-                    setSelectedAction(event.target.value as 'delete');
-                    setIsDeleteAssetOpen(true);
-                  }}
-                  isDisabled={selectedAssets.length === 0}
-                  value={selectedAction}
-                />
-              </Spacings.Inline>
-            </Spacings.Inline>
-
-            {assets.length > 0 && (
-              <AssetTable
-                items={assets}
-                onSelectionChange={setSelectedAssets}
-                onRowClick={(row) => {
-                  setAsset(row);
-                  setIsEditAssetOpen(true);
-                }}
-              />
-            )}
-          </Spacings.Stack>
+                <Delete />
+                {intl.formatMessage(messages.delete)}
+              </Button>
+            </Stack>
+            <AssetTable
+              items={assets}
+              onSelectionChange={setSelectedAssets}
+              onRowClick={(row) => {
+                setAsset(row);
+                setIsEditAssetOpen(true);
+              }}
+            />
+          </Stack>
         ) : (
-          <Spacings.Stack scale="s">
-            <Text.Headline intlMessage={messages.noResults} />
-          </Spacings.Stack>
+          <Heading as="h3" size="md">
+            <FormattedMessage {...messages.noResults} />
+          </Heading>
         )}
         {isAddAssetOpen && (
           <AssetsCreate
@@ -135,7 +115,7 @@ const AssetsList: FC<Props> = ({
         )}
         {isDeleteAssetOpen && (
           <DeleteAsset
-            onClose={() => async () => {
+            onClose={async () => {
               await refetch();
               setIsDeleteAssetOpen(false);
             }}
@@ -143,7 +123,7 @@ const AssetsList: FC<Props> = ({
             selectedAssets={selectedAssets}
           />
         )}
-      </Spacings.Stack>
+      </Stack>
     </InfoMainPage>
   );
 };

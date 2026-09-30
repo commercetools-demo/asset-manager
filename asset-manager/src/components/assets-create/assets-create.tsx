@@ -1,6 +1,7 @@
 import { FC, useCallback } from 'react';
 import { FormModalPage } from '@commercetools-frontend/application-components';
 import { useIntl } from 'react-intl';
+import { FormikErrors, FormikHelpers } from 'formik';
 import messages from './messages';
 import {
   showApiErrorNotification,
@@ -8,8 +9,8 @@ import {
   useShowNotification,
 } from '@commercetools-frontend/actions-global';
 import { DOMAINS } from '@commercetools-frontend/constants';
+import { createLocalizedString, omitEmptyTranslations } from '../../helpers';
 import AssetForm, { TFormValues } from '../asset-form/asset-form';
-import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
 import {
   transformLocalizedFieldToLocalizedString,
   transformLocalizedStringToLocalizedField,
@@ -31,7 +32,10 @@ export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
   const showNotification = useShowNotification();
 
   const handleSubmit = useCallback(
-    async (formikValues: TFormValues, formikHelpers) => {
+    async (
+      formikValues: TFormValues,
+      formikHelpers: FormikHelpers<TFormValues>
+    ) => {
       try {
         const draft: TAssetDraftInput = {
           key:
@@ -39,10 +43,10 @@ export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
               ? formikValues.key
               : undefined,
           name: transformLocalizedStringToLocalizedField(
-            LocalizedTextInput.omitEmptyTranslations(formikValues.name)
+            omitEmptyTranslations(formikValues.name)
           ),
           description: transformLocalizedStringToLocalizedField(
-            LocalizedTextInput.omitEmptyTranslations(formikValues.description)
+            omitEmptyTranslations(formikValues.description)
           ),
           sources: formikValues.sources?.map((source) => {
             return {
@@ -80,7 +84,9 @@ export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
           });
         }
 
-        formikHelpers.setErrors(transformedErrors.formErrors);
+        formikHelpers.setErrors(
+          transformedErrors.formErrors as FormikErrors<TFormValues>
+        );
       }
     },
     [intl]
@@ -90,11 +96,11 @@ export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
       onSubmit={handleSubmit}
       initialValues={{
         key: '',
-        name: LocalizedTextInput.createLocalizedString(
+        name: createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString([]) ?? {}
         ),
-        description: LocalizedTextInput.createLocalizedString(
+        description: createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString([]) ?? {}
         ),

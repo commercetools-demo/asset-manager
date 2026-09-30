@@ -1,6 +1,7 @@
 import { FC, useCallback } from 'react';
 import { FormModalPage } from '@commercetools-frontend/application-components';
 import { useIntl } from 'react-intl';
+import { FormikErrors, FormikHelpers } from 'formik';
 import messages from './messages';
 import {
   TApiErrorNotificationOptions,
@@ -8,12 +9,11 @@ import {
   useShowNotification,
 } from '@commercetools-frontend/actions-global';
 import { DOMAINS } from '@commercetools-frontend/constants';
+import { Alert } from '@commercetools/nimbus';
+import { createLocalizedString, omitEmptyTranslations } from '../../helpers';
 import AssetForm, { TFormValues } from '../asset-form/asset-form';
-import LocalizedTextInput from '@commercetools-uikit/localized-text-input';
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
-import { ContentNotification } from '@commercetools-uikit/notifications';
-import Text from '@commercetools-uikit/text';
 import { transformErrors } from './transform-errors';
 import { TAsset } from '../../types/generated/ctp';
 
@@ -46,13 +46,14 @@ export const AssetsEdit: FC<Props> = ({ onClose, asset, onEdit }) => {
   const showApiErrorNotification = useShowApiErrorNotification();
 
   const handleSubmit = useCallback(
-    async (formikValues: TFormValues, formikHelpers) => {
+    async (
+      formikValues: TFormValues,
+      formikHelpers: FormikHelpers<TFormValues>
+    ) => {
       try {
         const draft = {
-          name: LocalizedTextInput.omitEmptyTranslations(formikValues.name),
-          description: LocalizedTextInput.omitEmptyTranslations(
-            formikValues.description
-          ),
+          name: omitEmptyTranslations(formikValues.name),
+          description: omitEmptyTranslations(formikValues.description),
           sources: formikValues.sources?.map((source) => {
             return {
               uri: source.uri,
@@ -94,7 +95,9 @@ export const AssetsEdit: FC<Props> = ({ onClose, asset, onEdit }) => {
           });
         }
 
-        formikHelpers.setErrors(transformedErrors.formErrors);
+        formikHelpers.setErrors(
+          transformedErrors.formErrors as FormikErrors<TFormValues>
+        );
       }
     },
     []
@@ -102,9 +105,11 @@ export const AssetsEdit: FC<Props> = ({ onClose, asset, onEdit }) => {
 
   if (!asset) {
     return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
+      <Alert.Root colorPalette="info">
+        <Alert.Description>
+          {intl.formatMessage(messages.noResults)}
+        </Alert.Description>
+      </Alert.Root>
     );
   }
 
@@ -113,11 +118,11 @@ export const AssetsEdit: FC<Props> = ({ onClose, asset, onEdit }) => {
       onSubmit={handleSubmit}
       initialValues={{
         key: asset.key || '',
-        name: LocalizedTextInput.createLocalizedString(
+        name: createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString(asset.nameAllLocales) ?? {}
         ),
-        description: LocalizedTextInput.createLocalizedString(
+        description: createLocalizedString(
           projectLanguages,
           transformLocalizedFieldToLocalizedString(
             asset.descriptionAllLocales || []

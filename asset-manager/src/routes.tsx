@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { useCustomViewContext } from '@commercetools-frontend/application-shell-connectors';
-import { ContentNotification } from '@commercetools-uikit/notifications';
-import Text from '@commercetools-uikit/text';
+import { Alert } from '@commercetools/nimbus';
+import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import ProductAssets from './components/product-assets';
 import CategoryAssets from './components/category-assets';
@@ -19,9 +19,11 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
 
   if (!productId && !variantId && !categoryId) {
     return (
-      <ContentNotification type="error">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
+      <Alert.Root colorPalette="critical">
+        <Alert.Description>
+          <FormattedMessage {...messages.noResults} />
+        </Alert.Description>
+      </Alert.Root>
     );
   }
   return (

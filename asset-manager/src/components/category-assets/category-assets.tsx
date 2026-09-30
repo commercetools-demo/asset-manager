@@ -8,10 +8,8 @@ import {
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
 import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
 import { createSyncCategories } from '@commercetools/sync-actions';
-import { ContentNotification } from '@commercetools-uikit/notifications';
-import Text from '@commercetools-uikit/text';
-import Spacings from '@commercetools-uikit/spacings';
-import LoadingSpinner from '@commercetools-uikit/loading-spinner';
+import { FormattedMessage } from 'react-intl';
+import { Alert, LoadingSpinner, Stack } from '@commercetools/nimbus';
 import messages from '../assets-list/messages';
 import {
   useCategoryFetcher,
@@ -31,24 +29,26 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
 
   if (error) {
     return (
-      <ContentNotification type="error">
-        <Text.Body>{getErrorMessage(error)}</Text.Body>
-      </ContentNotification>
+      <Alert.Root colorPalette="critical">
+        <Alert.Description>{getErrorMessage(error)}</Alert.Description>
+      </Alert.Root>
     );
   }
   if (loading) {
     return (
-      <Spacings.Stack alignItems="center">
+      <Stack direction="column" align="center">
         <LoadingSpinner />
-      </Spacings.Stack>
+      </Stack>
     );
   }
 
   if (!category) {
     return (
-      <ContentNotification type="info">
-        <Text.Body intlMessage={messages.noResults} />
-      </ContentNotification>
+      <Alert.Root colorPalette="info">
+        <Alert.Description>
+          <FormattedMessage {...messages.noResults} />
+        </Alert.Description>
+      </Alert.Root>
     );
   }
 
@@ -127,31 +127,10 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
       }),
     });
   };
-  const onSortFinish = async (reordered: Array<TAsset>) => {
-    const before = {
-      id: category?.id,
-      assets: category?.assets.map((asset) => {
-        return { id: asset.id };
-      }),
-    };
-    const now = {
-      id: category?.id,
-      assets: reordered.map((asset) => {
-        return { id: asset.id };
-      }),
-    };
-    const actions = syncCategories.buildActions(now, before);
-    await categoryUpdater.execute({
-      id: categoryId,
-      version: category.version,
-      actions: createGraphQlUpdateActions(actions),
-    });
-  };
   return (
     <Assets
       onCreate={onCreate}
       onEdit={onEdit}
-      onSortFinish={onSortFinish}
       onDelete={onDelete}
       assets={category.assets || []}
       refetch={refetch}
