@@ -152,11 +152,27 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
       }),
     });
   };
+  const onSortFinish = async (reordered: Array<TAsset>) => {
+    await productUpdater.execute({
+      id: productId,
+      version: product.version,
+      actions: [
+        {
+          changeAssetOrder: {
+            variantId,
+            assetOrder: reordered.map((asset) => asset.id),
+            staged: false,
+          },
+        },
+      ],
+    });
+  };
   return (
     <Assets
       onCreate={onCreate}
       onEdit={onEdit}
       onDelete={onDelete}
+      onSortFinish={onSortFinish}
       assets={variant?.assets || []}
       refetch={refetch}
     />

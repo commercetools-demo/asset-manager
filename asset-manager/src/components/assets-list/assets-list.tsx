@@ -1,6 +1,6 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Button, Heading, Stack } from '@commercetools/nimbus';
-import { Add, Delete } from '@commercetools/nimbus-icons';
+import { Button, Heading, Stack, ToggleButton } from '@commercetools/nimbus';
+import { Add, Delete, DragIndicator } from '@commercetools/nimbus-icons';
 import messages from './messages';
 import { FC, useState } from 'react';
 import DeleteAsset from '../assets-delete';
@@ -9,6 +9,7 @@ import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create';
 import { TAsset, TAssetDraftInput } from '../../types/generated/ctp';
 import AssetsEdit from '../assets-edit';
+import AssetsReorderList from '../assets-reorder-list';
 
 type Props = {
   onEdit: (
@@ -28,6 +29,7 @@ type Props = {
   ) => Promise<void>;
   onCreate: (draft: TAssetDraftInput) => Promise<void>;
   onDelete: (assets: Array<TAsset>) => Promise<void>;
+  onSortFinish: (reordered: Array<TAsset>) => Promise<void>;
   assets: Array<TAsset>;
   refetch: () => Promise<unknown>;
 };
@@ -37,6 +39,7 @@ const AssetsList: FC<Props> = ({
   onEdit,
   onCreate,
   onDelete,
+  onSortFinish,
   refetch,
 }) => {
   const intl = useIntl();
@@ -45,6 +48,7 @@ const AssetsList: FC<Props> = ({
   const [isEditAssetOpen, setIsEditAssetOpen] = useState(false);
   const [asset, setAsset] = useState<TAsset | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
+  const [isReorder, setIsReorder] = useState(false);
   const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
 
   return (
@@ -68,25 +72,44 @@ const AssetsList: FC<Props> = ({
       <Stack direction="column" gap="800">
         {assets.length > 0 ? (
           <Stack direction="column" gap="100" align="stretch">
-            <Stack direction="row" justify="flex-start">
+            <Stack direction="row" justify="flex-start" gap="200">
               <Button
                 variant="outline"
                 colorPalette="critical"
-                isDisabled={selectedAssets.length === 0}
+                isDisabled={isReorder || selectedAssets.length === 0}
                 onPress={() => setIsDeleteAssetOpen(true)}
               >
                 <Delete />
                 {intl.formatMessage(messages.delete)}
               </Button>
+              <ToggleButton
+                colorPalette="primary"
+                isSelected={isReorder}
+                onChange={setIsReorder}
+              >
+                <DragIndicator />
+                {intl.formatMessage(messages.reorder)}
+              </ToggleButton>
             </Stack>
-            <AssetTable
-              items={assets}
-              onSelectionChange={setSelectedAssets}
-              onRowClick={(row) => {
-                setAsset(row);
-                setIsEditAssetOpen(true);
-              }}
-            />
+            {isReorder ? (
+              <AssetsReorderList
+                items={assets}
+                onSortFinish={onSortFinish}
+                onClose={async () => {
+                  await refetch();
+                  setIsReorder(false);
+                }}
+              />
+            ) : (
+              <AssetTable
+                items={assets}
+                onSelectionChange={setSelectedAssets}
+                onRowClick={(row) => {
+                  setAsset(row);
+                  setIsEditAssetOpen(true);
+                }}
+              />
+            )}
           </Stack>
         ) : (
           <Heading as="h3" size="md">

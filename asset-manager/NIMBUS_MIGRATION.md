@@ -78,6 +78,7 @@ browser global, extend the shim.
 | `TextInput` / `NumberInput` + `ErrorMessage` | `TextInput` / `NumberInput` + `FieldErrors` |
 | `DataTable` + `useRowSelection` + `CheckboxInput` | `DataTable.Root` with `selectionMode="multiple"` |
 | `DataTableManager` | `DataTable.Manager` inside `DataTable.Root` |
+| `react-sortable-hoc` reorder grid | `DraggableList.Root` + `DraggableList.Item` (`assets-reorder-list`) |
 | `SelectField` "Actions" (single `Delete` option) | a `Delete` `Button`, disabled until rows are selected |
 | `@commercetools-uikit/icons` | `@commercetools/nimbus-icons` (`Add`, `Delete`) |
 
@@ -86,11 +87,7 @@ Spacing conversions (UI Kit scale → Nimbus token): `xs`→`100`, `s`→`200`,
 
 ## Scope
 
-Every `@commercetools-uikit/*` dependency and import has been removed. The
-unused drag-and-drop reorder components (`assets-sortable-list`,
-`assets-sort-grid`, `assets-sort-grid-item`) — dead since reordering was
-removed — were deleted rather than migrated, along with the `onSortFinish`
-handlers still being passed to `AssetsList`.
+Every `@commercetools-uikit/*` dependency and import has been removed.
 
 ## Data fetching and generated types
 

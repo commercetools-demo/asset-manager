@@ -123,11 +123,25 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
       }),
     });
   };
+  const onSortFinish = async (reordered: Array<TAsset>) => {
+    await categoryUpdater.execute({
+      id: categoryId,
+      version: category.version,
+      actions: [
+        {
+          changeAssetOrder: {
+            assetOrder: reordered.map((asset) => asset.id),
+          },
+        },
+      ],
+    });
+  };
   return (
     <Assets
       onCreate={onCreate}
       onEdit={onEdit}
       onDelete={onDelete}
+      onSortFinish={onSortFinish}
       assets={category.assets || []}
       refetch={refetch}
     />
