@@ -1,3 +1,20 @@
+query FetchProduct($id: String) {
+  product(id: $id) {
+    id
+    version
+    masterData {
+      current {
+        masterVariant {
+          ...ProductVariantAssetsFragment
+        }
+        variants {
+          ...ProductVariantAssetsFragment
+        }
+      }
+    }
+  }
+}
+
 fragment ProductAssetFragment on Asset {
   id
   key
@@ -26,22 +43,5 @@ fragment ProductVariantAssetsFragment on ProductVariant {
   key
   assets {
     ...ProductAssetFragment
-  }
-}
-
-query FetchProduct($id: String) {
-  product(id: $id) {
-    id
-    version
-    masterData {
-      current {
-        masterVariant {
-          ...ProductVariantAssetsFragment
-        }
-        variants {
-          ...ProductVariantAssetsFragment
-        }
-      }
-    }
   }
 }

@@ -9,9 +9,9 @@ import {
   TQuery_ProductArgs,
 } from '../../types/generated/ctp';
 import { extractErrorFromGraphQlResponse } from '../../helpers';
-import { mcApiContext } from '../shared/mc-api-context';
 import FetchQuery from './fetch.ctp.graphql';
 import UpdateMutation from './update.ctp.graphql';
+import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
 
 // Hand-narrowed to the fragment shape: the generated TQuery/TProduct types are
 // recursive enough to hit TypeScript's instantiation depth limit (TS2589).
@@ -43,7 +43,10 @@ export const useProductFetcher = (variables: TQuery_ProductArgs) => {
   const { data, error, loading, refetch } = useMcQuery<
     TFetchProductQuery,
     TQuery_ProductArgs & OperationVariables
-  >(FetchQuery, { variables, context: mcApiContext });
+  >(FetchQuery, {
+    variables,
+    context: { target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM },
+  });
   return { product: data?.product, error, loading, refetch };
 };
 
@@ -51,7 +54,9 @@ export const useProductUpdater = () => {
   const [executeMutation, { loading }] = useMcMutation<
     TUpdateProductMutation,
     TMutation_UpdateProductArgs & OperationVariables
-  >(UpdateMutation, { context: mcApiContext });
+  >(UpdateMutation, {
+    context: { target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM },
+  });
 
   const execute = async (variables: TMutation_UpdateProductArgs) => {
     try {

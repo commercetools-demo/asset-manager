@@ -9,9 +9,9 @@ import {
   TQuery_CategoryArgs,
 } from '../../types/generated/ctp';
 import { extractErrorFromGraphQlResponse } from '../../helpers';
-import { mcApiContext } from '../shared/mc-api-context';
 import FetchQuery from './fetch.ctp.graphql';
 import UpdateMutation from './update.ctp.graphql';
+import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
 
 // Hand-narrowed to the fragment shape: the generated TQuery/TCategory types are
 // recursive enough to hit TypeScript's instantiation depth limit (TS2589).
@@ -30,7 +30,10 @@ export const useCategoryFetcher = (variables: TQuery_CategoryArgs) => {
   const { data, error, loading, refetch } = useMcQuery<
     TFetchCategoryQuery,
     TQuery_CategoryArgs & OperationVariables
-  >(FetchQuery, { variables, context: mcApiContext });
+  >(FetchQuery, {
+    variables,
+    context: { target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM },
+  });
   return { category: data?.category, error, loading, refetch };
 };
 
@@ -38,7 +41,9 @@ export const useCategoryUpdater = () => {
   const [executeMutation, { loading }] = useMcMutation<
     TUpdateCategoryMutation,
     TMutation_UpdateCategoryArgs & OperationVariables
-  >(UpdateMutation, { context: mcApiContext });
+  >(UpdateMutation, {
+    context: { target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM },
+  });
 
   const execute = async (variables: TMutation_UpdateCategoryArgs) => {
     try {

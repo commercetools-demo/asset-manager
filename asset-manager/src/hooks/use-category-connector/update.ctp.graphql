@@ -1,3 +1,13 @@
+mutation UpdateCategory(
+  $id: String
+  $version: Long!
+  $actions: [CategoryUpdateAction!]!
+) {
+  updateCategory(id: $id, version: $version, actions: $actions) {
+    ...CategoryAssetsFragment
+  }
+}
+
 fragment CategoryAssetFragment on Asset {
   id
   key
@@ -26,15 +36,5 @@ fragment CategoryAssetsFragment on Category {
   version
   assets {
     ...CategoryAssetFragment
-  }
-}
-
-mutation UpdateCategory(
-  $id: String
-  $version: Long!
-  $actions: [CategoryUpdateAction!]!
-) {
-  updateCategory(id: $id, version: $version, actions: $actions) {
-    ...CategoryAssetsFragment
   }
 }

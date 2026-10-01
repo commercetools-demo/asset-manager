@@ -1,18 +1,19 @@
 import {
-  Box,
   Button,
-  DataTable,
+  Grid,
+  Text,
   FieldErrors,
   IconButton,
   NumberInput,
   TextInput,
-  type DataTableColumnItem,
+  Stack,
+  Flex,
 } from '@commercetools/nimbus';
 import { Add, Delete } from '@commercetools/nimbus-icons';
 import { FormattedMessage, useIntl } from 'react-intl';
 import messages from './messages';
-import { FC } from 'react';
-import { useFormik } from 'formik';
+import { FC, Fragment } from 'react';
+import { useFormikContext } from 'formik';
 import {
   AssetSource,
   TFormValues,
@@ -39,7 +40,6 @@ type Props = {
   onAddEnumValue: (item: AssetSource) => void;
   onRemoveValue: (absoluteIndex: number) => void;
   onChangeValue: OnChangeValue;
-  formik: ReturnType<typeof useFormik<TFormValues>>;
   isDisabled?: boolean;
 };
 
@@ -49,13 +49,13 @@ const renderError = (key: string) =>
   ) : null;
 
 export const AssetsSourcesForm: FC<Props> = ({
-  formik,
   onAddEnumValue,
   onRemoveValue,
   onChangeValue,
   isDisabled,
 }) => {
   const intl = useIntl();
+  const formik = useFormikContext<TFormValues>();
 
   const items: Array<AssetSource> = formik.values.sources ?? [];
 
@@ -81,6 +81,8 @@ export const AssetsSourcesForm: FC<Props> = ({
     return (
       <>
         <TextInput
+          width="full"
+          minWidth="0"
           aria-label={label}
           value={row[field] || ''}
           name={`sources.${row.index}.${field}`}
@@ -102,6 +104,8 @@ export const AssetsSourcesForm: FC<Props> = ({
     return (
       <>
         <NumberInput
+          width="full"
+          minWidth="0"
           aria-label={label}
           value={row[field] ?? NaN}
           name={`sources.${row.index}.${field}`}
@@ -128,66 +132,68 @@ export const AssetsSourcesForm: FC<Props> = ({
     messages.tableHeaderLabelContentType
   );
 
-  const columns: Array<DataTableColumnItem<RowItem>> = [
-    {
-      id: 'key',
-      header: keyLabel,
-      accessor: (row) => renderTextInput(row, 'key', keyLabel),
-    },
-    {
-      id: 'uri',
-      header: uriLabel,
-      accessor: (row) => renderTextInput(row, 'uri', uriLabel),
-    },
-    {
-      id: 'width',
-      header: widthLabel,
-      accessor: (row) => renderNumberInput(row, 'width', widthLabel),
-    },
-    {
-      id: 'height',
-      header: heightLabel,
-      accessor: (row) => renderNumberInput(row, 'height', heightLabel),
-    },
-    {
-      id: 'contentType',
-      header: contentTypeLabel,
-      accessor: (row) => renderTextInput(row, 'contentType', contentTypeLabel),
-    },
-    {
-      id: 'delete',
-      header: '',
-      accessor: (row) => (
-        <IconButton
-          aria-label="Delete List Item"
-          variant="ghost"
-          colorPalette="primary"
-          size="xs"
-          isDisabled={isDisabled || items.length === 1}
-          onPress={() => onRemoveValue(row.index)}
-        >
-          <Delete />
-        </IconButton>
-      ),
-    },
+  const headers = [
+    keyLabel,
+    uriLabel,
+    widthLabel,
+    heightLabel,
+    contentTypeLabel,
+    '',
   ];
 
-  const footer = (
-    <Button
-      variant="outline"
-      colorPalette="primary"
-      onPress={() => onAddEnumValue(emptyRow)}
-      isDisabled={isDisabled}
-    >
-      <Add />
-      {intl.formatMessage(messages.addEnumButtonLabel)}
-    </Button>
-  );
-
   return (
-    <Box width="100%">
-      <DataTable columns={columns} rows={rows} footer={footer} />
-    </Box>
+    <Stack direction="column" gap="400">
+      <Flex justifyContent="flex-end">
+        <Button
+          variant="outline"
+          colorPalette="primary"
+          isDisabled={isDisabled}
+          onPress={() => onAddEnumValue(emptyRow)}
+        >
+          <Add />
+          {intl.formatMessage(messages.addEnumButtonLabel)}
+        </Button>
+      </Flex>
+      <Grid
+        templateColumns="minmax(0, 2fr) minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr) auto"
+        columnGap="200"
+        rowGap="300"
+        alignItems="start"
+      >
+        {headers.map((header, index) => (
+          <Grid.Item key={index}>
+            <Text fontWeight="600" textStyle="sm" color="neutral.11">
+              {header}
+            </Text>
+          </Grid.Item>
+        ))}
+        {rows.map((row) => (
+          <Fragment key={row.id}>
+            <Grid.Item>{renderTextInput(row, 'key', keyLabel)}</Grid.Item>
+            <Grid.Item>{renderTextInput(row, 'uri', uriLabel)}</Grid.Item>
+            <Grid.Item>{renderNumberInput(row, 'width', widthLabel)}</Grid.Item>
+            <Grid.Item>
+              {renderNumberInput(row, 'height', heightLabel)}
+            </Grid.Item>
+            <Grid.Item>
+              {renderTextInput(row, 'contentType', contentTypeLabel)}
+            </Grid.Item>
+            <Grid.Item>
+              <IconButton
+                aria-label="Delete List Item"
+                variant="ghost"
+                colorPalette="primary"
+                size="xs"
+                isDisabled={isDisabled || items.length === 1}
+                onPress={() => onRemoveValue(row.index)}
+              >
+                <Delete />
+              </IconButton>
+            </Grid.Item>
+          </Fragment>
+        ))}
+      </Grid>
+    </Stack>
   );
 };
 

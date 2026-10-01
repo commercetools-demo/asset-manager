@@ -1,5 +1,11 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Button, Heading, Stack, ToggleButton } from '@commercetools/nimbus';
+import {
+  Alert,
+  Button,
+  Heading,
+  Stack,
+  ToggleButton,
+} from '@commercetools/nimbus';
 import { Add, Delete, DragIndicator } from '@commercetools/nimbus-icons';
 import messages from './messages';
 import { FC, useState } from 'react';
@@ -112,9 +118,11 @@ const AssetsList: FC<Props> = ({
             )}
           </Stack>
         ) : (
-          <Heading as="h3" size="md">
-            <FormattedMessage {...messages.noResults} />
-          </Heading>
+          <Alert.Root colorPalette="info">
+            <Alert.Description>
+              <FormattedMessage {...messages.noResults} />
+            </Alert.Description>
+          </Alert.Root>
         )}
         {isAddAssetOpen && (
           <AssetsCreate

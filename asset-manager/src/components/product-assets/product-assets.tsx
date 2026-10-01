@@ -40,9 +40,12 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   if (!product) {
     return (
-      <Alert.Root colorPalette="info">
+      <Alert.Root colorPalette="warning">
         <Alert.Description>
-          <FormattedMessage {...messages.noResults} />
+          <FormattedMessage
+            {...messages.productNotFound}
+            values={{ productId }}
+          />
         </Alert.Description>
       </Alert.Root>
     );
@@ -56,9 +59,12 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
 
   if (!loading && !variant) {
     return (
-      <Alert.Root colorPalette="info">
+      <Alert.Root colorPalette="warning">
         <Alert.Description>
-          <FormattedMessage {...messages.noResults} />
+          <FormattedMessage
+            {...messages.variantNotFound}
+            values={{ productId, variantId }}
+          />
         </Alert.Description>
       </Alert.Root>
     );

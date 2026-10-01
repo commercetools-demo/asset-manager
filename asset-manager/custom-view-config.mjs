@@ -9,7 +9,7 @@ const config = {
     development: {
       initialProjectKey: '${env:INITIAL_PROJECT_KEY}',
       hostUriPath:
-        '/tech-sales-manufacturing-store/products/b12eb265-c174-4900-adc8-4aab0ec0ca5f/variants/1/images',
+        '/tech-sales-good-store/products/df2018bd-7fa4-4a04-933d-5e2b97e1ff8e/variants/1/images',
     },
     production: {
       customViewId: '${env:CUSTOM_VIEW_ID}',

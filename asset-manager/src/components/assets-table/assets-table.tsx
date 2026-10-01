@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import {
   DataTable,
@@ -24,7 +24,7 @@ interface Props {
 const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set());
   const [visibleColumns, setVisibleColumns] = useState([
-    'key',
+    'assetKey',
     'name',
     'description',
     'url',
@@ -32,44 +32,50 @@ const AssetsTable: FC<Props> = ({ items, onSelectionChange, onRowClick }) => {
   const [isCondensed, setIsCondensed] = useState(true);
   const [isTruncated, setIsTruncated] = useState(true);
 
-  const { dataLocale, projectLanguages } = useApplicationContext((context) => ({
-    dataLocale: context.dataLocale ?? '',
-    projectLanguages: context.project?.languages ?? [],
-  }));
+  const dataLocale = useApplicationContext(
+    (context) => context.dataLocale ?? ''
+  );
+  const projectLanguages = useApplicationContext(
+    (context) => context.project?.languages
+  );
 
-  const formatLocalizedField = (field: TAsset['descriptionAllLocales']) =>
-    formatLocalizedString(
-      { name: transformLocalizedFieldToLocalizedString(field ?? []) },
+  // React Aria's table collection needs stable column definitions; a new array
+  // on every render can desync header and row cells ("Cell count must match").
+  const columns = useMemo<Array<DataTableColumnItem<TAsset>>>(() => {
+    const formatLocalizedField = (field: TAsset['descriptionAllLocales']) =>
+      formatLocalizedString(
+        { name: transformLocalizedFieldToLocalizedString(field ?? []) },
+        {
+          key: 'name',
+          locale: dataLocale,
+          fallbackOrder: projectLanguages ?? [],
+          fallback: NO_VALUE_FALLBACK,
+        }
+      );
+    return [
       {
-        key: 'name',
-        locale: dataLocale,
-        fallbackOrder: projectLanguages,
-        fallback: NO_VALUE_FALLBACK,
-      }
-    );
-
-  const columns: Array<DataTableColumnItem<TAsset>> = [
-    {
-      id: 'key',
-      header: 'Key',
-      accessor: (row) => row.key || NO_VALUE_FALLBACK,
-    },
-    {
-      id: 'name',
-      header: 'Name',
-      accessor: (row) => formatLocalizedField(row.nameAllLocales),
-    },
-    {
-      id: 'description',
-      header: 'Description',
-      accessor: (row) => formatLocalizedField(row.descriptionAllLocales),
-    },
-    {
-      id: 'url',
-      header: 'URL',
-      accessor: (row) => row.sources.map((source) => source.uri).join(', '),
-    },
-  ];
+        // `key` as a column id breaks Nimbus DataTable's header collection.
+        id: 'assetKey',
+        header: 'Key',
+        accessor: (row) => row.key || NO_VALUE_FALLBACK,
+      },
+      {
+        id: 'name',
+        header: 'Name',
+        accessor: (row) => formatLocalizedField(row.nameAllLocales),
+      },
+      {
+        id: 'description',
+        header: 'Description',
+        accessor: (row) => formatLocalizedField(row.descriptionAllLocales),
+      },
+      {
+        id: 'url',
+        header: 'URL',
+        accessor: (row) => row.sources.map((source) => source.uri).join(', '),
+      },
+    ];
+  }, [dataLocale, projectLanguages]);
 
   const handleSelectionChange = (keys: Selection) => {
     setSelectedKeys(keys);

@@ -1,3 +1,9 @@
+query FetchCategory($id: String) {
+  category(id: $id) {
+    ...CategoryAssetsFragment
+  }
+}
+
 fragment CategoryAssetFragment on Asset {
   id
   key
@@ -26,11 +32,5 @@ fragment CategoryAssetsFragment on Category {
   version
   assets {
     ...CategoryAssetFragment
-  }
-}
-
-query FetchCategory($id: String) {
-  category(id: $id) {
-    ...CategoryAssetsFragment
   }
 }

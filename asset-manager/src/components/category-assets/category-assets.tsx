@@ -40,9 +40,12 @@ export const CategoryAssets: FC<Props> = ({ categoryId }) => {
 
   if (!category) {
     return (
-      <Alert.Root colorPalette="info">
+      <Alert.Root colorPalette="warning">
         <Alert.Description>
-          <FormattedMessage {...messages.noResults} />
+          <FormattedMessage
+            {...messages.categoryNotFound}
+            values={{ categoryId }}
+          />
         </Alert.Description>
       </Alert.Root>
     );

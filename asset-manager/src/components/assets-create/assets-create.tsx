@@ -104,6 +104,7 @@ export const AssetsCreate: FC<Props> = ({ onClose, onCreate }) => {
           projectLanguages,
           transformLocalizedFieldToLocalizedString([]) ?? {}
         ),
+        sources: [{ uri: '' }],
       }}
     >
       {(formProps) => {

@@ -31,4 +31,8 @@ export default defineMessages({
     id: 'AssetSourceList.form.errors.missingRequiredField',
     defaultMessage: 'This field is required. Provide a value.',
   },
+  noResults: {
+    id: 'AssetSourceList.noResults',
+    defaultMessage: 'No assets added yet.',
+  },
 });
