@@ -8,6 +8,7 @@ import {
 } from './types';
 import { transformLocalizedStringToLocalizedField } from '@commercetools-frontend/l10n';
 import { LocalizedField } from '@commercetools/nimbus';
+import type { createSyncProducts } from '@commercetools/sync-actions';
 
 export const getErrorMessage = (error: ApolloError) =>
   error.graphQLErrors?.map((e) => e.message).join('\n') || error.message;
@@ -83,6 +84,20 @@ const getAddAssetActionPayload = (payload: TAddAssetActionPayload) => {
   };
 };
 
+type TRestSource = {
+  uri: string;
+  key?: string;
+  contentType?: string;
+  dimensions?: { w: number; h: number };
+};
+
+const toGraphQlSource = ({ dimensions, ...source }: TRestSource) => ({
+  ...source,
+  ...(dimensions && {
+    dimensions: { width: dimensions.w, height: dimensions.h },
+  }),
+});
+
 const convertAction = (
   action: TSyncAction,
   defaults?: { [x: string]: unknown }
@@ -108,6 +123,11 @@ const convertAction = (
       }
       break;
     }
+    case 'setAssetSources': {
+      const sources = actionPayload.sources as Array<TRestSource> | undefined;
+      actionPL = { ...actionPayload, sources: sources?.map(toGraphQlSource) };
+      break;
+    }
   }
   return {
     [actionName]: { ...actionPL, ...defaults },
@@ -115,16 +135,59 @@ const convertAction = (
 };
 
 export const createGraphQlUpdateActions = (
-  actions: TSyncAction[],
+  actions: ReadonlyArray<{ action: string }>,
   defaults?: { [x: string]: unknown }
 ) => {
   return actions.reduce<TGraphqlUpdateAction[]>(
     (previousActions, syncAction) => {
-      return [...previousActions, convertAction(syncAction, defaults)];
+      return [
+        ...previousActions,
+        convertAction(syncAction as TSyncAction, defaults),
+      ];
     },
     []
   );
 };
+
+// sync-actions diffs REST-shaped resources (`dimensions: { w, h }`, no
+// `null`s), while this app works with GraphQL-shaped data; these map between
+// the two at the diff boundary.
+type TProductSyncer = ReturnType<typeof createSyncProducts>;
+export type TSyncProductDraft = Parameters<TProductSyncer['buildActions']>[0];
+export type TProductSyncAction = ReturnType<
+  TProductSyncer['buildActions']
+>[number];
+
+type TAssetSourceLike = {
+  uri?: string | null;
+  key?: string | null;
+  contentType?: string | null;
+  dimensions?: { width?: number | null; height?: number | null } | null;
+};
+
+export const toRestSource = (source: TAssetSourceLike): TRestSource => ({
+  uri: source.uri ?? '',
+  ...(source.key && { key: source.key }),
+  ...(source.contentType && { contentType: source.contentType }),
+  ...(source.dimensions?.width != null &&
+    source.dimensions?.height != null && {
+      dimensions: { w: source.dimensions.width, h: source.dimensions.height },
+    }),
+});
+
+export const toRestAsset = (asset: {
+  id?: string;
+  key?: string | null;
+  name: Record<string, string>;
+  description?: Record<string, string>;
+  sources?: ReadonlyArray<TAssetSourceLike>;
+}) => ({
+  ...(asset.id && { id: asset.id }),
+  ...(asset.key && { key: asset.key }),
+  name: asset.name,
+  description: asset.description ?? {},
+  sources: (asset.sources ?? []).map(toRestSource),
+});
 
 export const omitEmptyTranslations = (
   localizedString: Record<string, string>

@@ -85,7 +85,7 @@ const AssetsList: FC<Props> = ({
             {intl.formatMessage(messages.title)}
           </Heading>
           <Button
-            variant="solid"
+            variant="outline"
             colorPalette="primary"
             onPress={() => setIsAddAssetOpen(true)}
           >

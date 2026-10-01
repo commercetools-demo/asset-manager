@@ -6,7 +6,12 @@ import {
   TAssetDraftInput,
 } from '../../types/generated/ctp';
 import { transformLocalizedFieldToLocalizedString } from '@commercetools-frontend/l10n';
-import { createGraphQlUpdateActions, getErrorMessage } from '../../helpers';
+import {
+  createGraphQlUpdateActions,
+  getErrorMessage,
+  toRestAsset,
+  type TSyncProductDraft,
+} from '../../helpers';
 import { createSyncProducts } from '@commercetools/sync-actions';
 import { FormattedMessage } from 'react-intl';
 import { Alert, LoadingSpinner, Stack } from '@commercetools/nimbus';
@@ -84,40 +89,33 @@ export const ProductAssets: FC<Props> = ({ productId, variantId }) => {
     },
     asset: TAsset
   ) => {
-    const before = {
+    const variantFields = {
+      id: variant?.id,
+      sku: variant?.sku ?? undefined,
+      key: variant?.key ?? undefined,
+    };
+    const before: TSyncProductDraft = {
       masterVariant: {
-        sku: variant?.sku,
-        id: variant?.id,
-        key: variant?.key,
+        ...variantFields,
         assets: [
-          {
-            name: transformLocalizedFieldToLocalizedString(
-              asset?.nameAllLocales || []
-            ),
+          toRestAsset({
+            id: asset.id,
+            key: asset.key,
+            name:
+              transformLocalizedFieldToLocalizedString(
+                asset.nameAllLocales || []
+              ) ?? {},
             description:
               transformLocalizedFieldToLocalizedString(
-                asset?.descriptionAllLocales || []
+                asset.descriptionAllLocales || []
               ) || {},
-            sources: asset?.sources,
-            id: asset.id,
-            key: asset?.key,
-          },
+            sources: asset.sources,
+          }),
         ],
       },
     };
-
-    const now = {
-      masterVariant: {
-        sku: variant?.sku,
-        id: variant?.id,
-        key: variant?.key,
-        assets: [
-          // new image
-          {
-            ...draft,
-          },
-        ],
-      },
+    const now: TSyncProductDraft = {
+      masterVariant: { ...variantFields, assets: [toRestAsset(draft)] },
     };
 
     const actions = syncProducts.buildActions(now, before);

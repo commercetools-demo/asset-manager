@@ -28,6 +28,8 @@ Product changes are applied to the current (published) Product data (`staged: fa
 
 The UI is available in English and German and follows the Merchant Center user's language. Messages live in [asset-manager/src/i18n/data](./asset-manager/src/i18n/data): run `npm run extract-intl` to refresh `core.json` after adding or changing messages, then update `en.json` and `de.json`.
 
+See [FEATURES.md](./FEATURES.md) for a detailed, code-derived feature inventory and known limitations.
+
 ## Local Development
 
 Requirements: Node.js 22 (see [.nvmrc](./asset-manager/.nvmrc)) and npm.
