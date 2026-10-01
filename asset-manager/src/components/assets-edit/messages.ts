@@ -11,10 +11,10 @@ export default defineMessages({
   },
   createSuccess: {
     id: 'EditAsset.form.message.success',
-    defaultMessage: 'Your Asset has been updated.',
+    defaultMessage: 'The asset has been updated.',
   },
   noResults: {
-    id: 'Assets.noResults',
-    defaultMessage: 'There are no Assets available in this project.',
+    id: 'EditAsset.notFound',
+    defaultMessage: 'This asset could not be found.',
   },
 });

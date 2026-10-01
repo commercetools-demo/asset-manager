@@ -5,13 +5,9 @@ export default defineMessages({
     id: 'Assets.title',
     defaultMessage: 'Assets list',
   },
-  subtitle: {
-    id: 'Assets.subtitle',
-    defaultMessage: 'Logged-id user: {firstName} {lastName}',
-  },
   noResults: {
     id: 'Assets.noResults',
-    defaultMessage: 'There are no Assets available for this variant.',
+    defaultMessage: 'There are no assets yet.',
   },
   productNotFound: {
     id: 'Assets.productNotFound',
@@ -32,10 +28,5 @@ export default defineMessages({
   reorderSuccess: {
     id: 'Assets.reorderSuccess',
     defaultMessage: 'The asset order has been saved.',
-  },
-  createSuccess: {
-    id: 'AddAsset.form.message.success',
-    description: 'Success message for create type',
-    defaultMessage: 'Your Asset has been created.',
   },
 });

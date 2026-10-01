@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
-import { useCustomViewContext } from '@commercetools-frontend/application-shell-connectors';
-import { Alert } from '@commercetools/nimbus';
+import {
+  useApplicationContext,
+  useCustomViewContext,
+} from '@commercetools-frontend/application-shell-connectors';
+import { Alert, NimbusI18nProvider } from '@commercetools/nimbus';
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import ProductAssets from './components/product-assets';
@@ -9,13 +12,13 @@ import CategoryAssets from './components/category-assets';
 type ApplicationRoutesProps = {
   children?: ReactNode;
 };
-const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
+const AssetsRoute = () => {
   const hostUrl = useCustomViewContext((context) => context.hostUrl);
 
-  const [_, productId, variantId] =
+  const [, productId, variantId] =
     hostUrl.match('/products/([^/]+)/variants/([^/]+)') || [];
 
-  const [__, categoryId] = hostUrl.match('/categories/([^/]+)/[^/]+') || [];
+  const [, categoryId] = hostUrl.match('/categories/([^/]+)/[^/]+') || [];
 
   if (!productId && !variantId && !categoryId) {
     return (
@@ -36,6 +39,18 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
       )}
       {categoryId && <CategoryAssets categoryId={categoryId} />}
     </>
+  );
+};
+
+// Nimbus' built-in texts (field errors, "Show all languages", ...) follow the
+// Merchant Center user's language; this needs the application context, so it
+// can't live in the entry point outside the shell.
+const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
+  const locale = useApplicationContext((context) => context.user?.locale);
+  return (
+    <NimbusI18nProvider locale={locale ?? 'en'}>
+      <AssetsRoute />
+    </NimbusI18nProvider>
   );
 };
 ApplicationRoutes.displayName = 'ApplicationRoutes';

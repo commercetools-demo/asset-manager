@@ -13,7 +13,7 @@ export default defineMessages({
   },
   tableHeaderLabelUri: {
     id: 'AssetSourceList.uri',
-    defaultMessage: 'Uri *',
+    defaultMessage: 'URI *',
   },
   tableHeaderLabelWidth: {
     id: 'AssetSourceList.width',
@@ -27,12 +27,12 @@ export default defineMessages({
     id: 'AssetSourceList.contentType',
     defaultMessage: 'Content Type',
   },
+  deleteSource: {
+    id: 'AssetSourceList.deleteSource',
+    defaultMessage: 'Delete source',
+  },
   missingRequiredField: {
     id: 'AssetSourceList.form.errors.missingRequiredField',
     defaultMessage: 'This field is required. Provide a value.',
-  },
-  noResults: {
-    id: 'AssetSourceList.noResults',
-    defaultMessage: 'No assets added yet.',
   },
 });

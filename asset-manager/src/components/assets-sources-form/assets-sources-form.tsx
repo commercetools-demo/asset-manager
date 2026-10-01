@@ -180,7 +180,7 @@ export const AssetsSourcesForm: FC<Props> = ({
             </Grid.Item>
             <Grid.Item>
               <IconButton
-                aria-label="Delete List Item"
+                aria-label={intl.formatMessage(messages.deleteSource)}
                 variant="ghost"
                 colorPalette="primary"
                 size="xs"

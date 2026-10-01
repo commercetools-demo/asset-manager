@@ -4,7 +4,7 @@ import {
   CustomViewShell,
   setupGlobalErrorListener,
 } from '@commercetools-frontend/application-shell';
-import { NimbusProvider, NimbusI18nProvider } from '@commercetools/nimbus';
+import { NimbusProvider } from '@commercetools/nimbus';
 import loadMessages from '../../load-messages';
 
 // Here we split up the main (app) bundle with the actual application business logic.
@@ -32,14 +32,12 @@ const apolloClient = createApolloClient({
 
 const EntryPoint = () => (
   <NimbusProvider>
-    <NimbusI18nProvider locale="en-US">
-      <CustomViewShell
-        applicationMessages={loadMessages}
-        apolloClient={apolloClient}
-      >
-        <AsyncApplicationRoutes />
-      </CustomViewShell>
-    </NimbusI18nProvider>
+    <CustomViewShell
+      applicationMessages={loadMessages}
+      apolloClient={apolloClient}
+    >
+      <AsyncApplicationRoutes />
+    </CustomViewShell>
   </NimbusProvider>
 );
 

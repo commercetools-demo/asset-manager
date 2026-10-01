@@ -12,6 +12,6 @@ export default defineMessages({
   createSuccess: {
     id: 'AddAsset.form.message.success',
     description: 'Success message for create type',
-    defaultMessage: 'Your Asset has been created.',
+    defaultMessage: 'The asset has been created.',
   },
 });

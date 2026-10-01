@@ -39,7 +39,9 @@ const AssetsDelete: FC<Props> = ({ onClose, selectedAssets, onDelete }) => {
       showNotification({
         kind: 'success',
         domain: DOMAINS.SIDE,
-        text: intl.formatMessage(messages.deleteSuccess),
+        text: intl.formatMessage(messages.deleteSuccess, {
+          number: selectedAssets.length,
+        }),
       });
       await onClose();
 
@@ -62,7 +64,7 @@ const AssetsDelete: FC<Props> = ({ onClose, selectedAssets, onDelete }) => {
 
   return (
     <ConfirmationDialog
-      title="Confirm deletion"
+      title={intl.formatMessage(messages.confirmTitle)}
       isOpen={confirmationModalState.isModalOpen}
       onClose={confirmationModalState.closeModal}
       onCancel={confirmationModalState.closeModal}
