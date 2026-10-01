@@ -1,10 +1,3 @@
-<p align="center">
-  <a href="https://commercetools.com/">
-    <img alt="commercetools logo" src="https://unpkg.com/@commercetools-frontend/assets/logos/commercetools_primary-logo_horizontal_RGB.png">
-  </a>
-  <b>Custom View starter template in TypeScript</b>
-</p>
+# Asset Manager app
 
-This is the [TypeScript](https://www.typescriptlang.org/) version of the starter template to develop Custom Views for the Merchant Center.
-
-TBD
+See the [repository README](../README.md) for features, local development and deployment.

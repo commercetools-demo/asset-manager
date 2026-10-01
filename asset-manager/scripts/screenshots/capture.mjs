@@ -14,6 +14,7 @@ import { chromium } from 'playwright';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = process.env.MC_PORT || 3001;
+const DATA_LOCALE = process.env.DATA_LOCALE || 'en-GB';
 const BASE = `http://localhost:${PORT}/`;
 const AUTH_STATE_PATH = path.join(__dirname, 'auth-state.json');
 const SESSION_STORAGE_PATH = path.join(__dirname, 'session-storage.json');
@@ -45,6 +46,12 @@ if (fs.existsSync(SESSION_STORAGE_PATH)) {
       'Without it, the app is likely to hang in an auth-bootstrap retry loop.'
   );
 }
+
+// The Merchant Center's data-locale switcher persists its choice here; set it
+// up front so localized fields (e.g. the edit form's name) show demo values.
+await context.addInitScript((locale) => {
+  window.localStorage.setItem('selectedDataLocale', locale);
+}, DATA_LOCALE);
 
 const page = await context.newPage();
 page.on('pageerror', (err) => console.log('[pageerror]', err.message));
@@ -78,12 +85,12 @@ async function shot(name) {
   console.log('shot:', name);
 }
 
-// Index 0 is the header row. Click the last cell (URL) rather than the first,
-// which holds the row-selection checkbox.
+// Rows are DraggableList items (a drag handle on the left, a delete button on
+// the right), so click into the middle of the row to trigger its edit action.
 async function clickFirstAssetRow() {
-  const row = panelFrame.getByRole('row').nth(1);
+  const row = panelFrame.getByRole('row').first();
   await row.waitFor({ state: 'visible', timeout: 10000 });
-  await row.getByRole('gridcell').last().click();
+  await row.click({ position: { x: 300, y: 12 } });
 }
 
 // Only one locator is reachable per dev-server run: the embedded context

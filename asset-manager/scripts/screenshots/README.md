@@ -23,7 +23,7 @@ npm run login      # opens a headed browser — log into the MC by hand, then it
 npm run capture     # headless; writes straight into ../../../docs, overwriting in place
 ```
 
-Override the port with `MC_PORT` if needed.
+Override the port with `MC_PORT` and the data locale (default `en-GB`) with `DATA_LOCALE` if needed.
 
 ## Notes
 
