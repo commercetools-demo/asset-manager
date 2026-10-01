@@ -23,7 +23,7 @@
     "postinstall": "npm run generate-types:chakra"
   },
   "dependencies": {
-    "@apollo/client": "3.12.4",
+    "@apollo/client": "3.14.1",
     "@babel/core": "^7.22.17",
     "@babel/runtime-corejs3": "^7.22.15",
     "@chakra-ui/react": "^3.36.1",
