@@ -2,6 +2,7 @@ import { FC, useCallback, useMemo, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import { NO_VALUE_FALLBACK } from '@commercetools-frontend/constants';
 import {
+  Box,
   DraggableList,
   Flex,
   Grid,
@@ -9,7 +10,7 @@ import {
   Stack,
   Text,
 } from '@commercetools/nimbus';
-import { Delete, DragIndicator } from '@commercetools/nimbus-icons';
+import { Delete } from '@commercetools/nimbus-icons';
 import {
   formatLocalizedString,
   transformLocalizedFieldToLocalizedString,
@@ -97,31 +98,16 @@ const AssetsTable: FC<Props> = ({
       {/* Mirrors each row's drag handle (rendered by DraggableList.Item) so
           the header columns line up with the rows. */}
       <Flex align="center" gap="200" px="200">
-        <IconButton
-          aria-hidden
-          isDisabled
-          visibility="hidden"
-          size="2xs"
-          variant="ghost"
-          colorPalette="neutral"
-        >
-          <DragIndicator />
-        </IconButton>
+        {/* Width of the row's 2xs drag handle. */}
+        <Box aria-hidden flexShrink="0" width="600" />
         <Grid flex="1" minWidth="0" templateColumns={templateColumns} gap="300">
           {headers.map((header) => (
             <Text key={header} fontWeight="500" textStyle="sm">
               {header}
             </Text>
           ))}
-          <IconButton
-            aria-hidden
-            isDisabled
-            visibility="hidden"
-            size="xs"
-            variant="ghost"
-          >
-            <Delete />
-          </IconButton>
+          {/* Width of the row's xs delete button. */}
+          <Box aria-hidden width="800" />
         </Grid>
       </Flex>
       <DraggableList.Root<TAssetItem>

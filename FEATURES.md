@@ -102,6 +102,23 @@ than depending on shared `commercetools-demo-shared-*` packages.
   session (`scripts/screenshots/`).
 - `netlify.toml` SPA rewrite (`/* -> /index.html`) for static preview hosting.
 
+## Testing
+
+- Jest specs render the Custom View with `renderCustomView` and mock GraphQL with
+  `msw` (`onUnhandledRequest: 'error'`); fixtures come from
+  `@commercetools/composable-commerce-test-data` (products, variants, categories),
+  with assets built in `src/test-utils/fixtures.ts` since the package has no Asset
+  model.
+- Covered: product and category asset lists, not-found and empty states,
+  unsupported pages, create (`addAsset` with sources), delete (`removeAsset`), and
+  in-place edits for products and categories (`changeAssetName`, never
+  `removeAsset` + `addAsset`) (`product-assets.spec.tsx`,
+  `category-assets.spec.tsx`, `routes.spec.tsx`).
+- `jest.resolver.js` works around Nimbus 3.4.0's CJS chunks requiring `*.cjs.js`
+  files that ship as `*.cjs`; `renderAssetManager` renders inside an async `act` so
+  the lazily loaded route chunks resolve under React 19.
+- Drag-and-drop reordering is not covered.
+
 ## Known limitations (stated in code/docs)
 
 - Asset tags, custom fields (`custom`) and asset types are not shown or editable.
@@ -110,4 +127,3 @@ than depending on shared `commercetools-demo-shared-*` packages.
   as an API error; the list reverts).
 - Only one context (product variant or category) is reachable per local dev-server
   run, set by `development.hostUriPath`.
-- No automated tests (`npm test` finds none).

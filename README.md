@@ -74,7 +74,7 @@ Requirements: Node.js 22 (see [.nvmrc](./asset-manager/.nvmrc)) and npm.
 | `npm run build` | Production build |
 | `npm run typecheck` | TypeScript check |
 | `npm run lint` | ESLint (flat config, including GraphQL documents) |
-| `npm test` | Jest tests |
+| `npm test` | Jest tests (msw-mocked GraphQL, `@commercetools/composable-commerce-test-data` fixtures) |
 | `npm run generate-types:ctp` | Log into the Merchant Center and regenerate `schemas/ctp.json` and `src/types/generated/ctp.ts` |
 | `npm run generate-types:chakra` | Regenerate Chakra types for Nimbus (runs automatically on `npm install`) |
 
