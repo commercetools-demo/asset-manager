@@ -30,14 +30,6 @@ const config = {
       value: 'Asset Manager',
     },
   ],
-  additionalEnv: {
-    CMS_API_URL: '${env:CMS_API_URL}',
-  },
-  headers: {
-    csp: {
-      'connect-src': ['*.us-central1.run.app'],
-    },
-  },
   locators: [
     'products.product_variant_details.general',
     'products.product_variant_details.images',

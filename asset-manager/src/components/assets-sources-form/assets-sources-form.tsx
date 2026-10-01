@@ -5,7 +5,6 @@ import {
   FieldErrors,
   IconButton,
   NumberInput,
-  Text,
   TextInput,
   type DataTableColumnItem,
 } from '@commercetools/nimbus';
@@ -19,8 +18,6 @@ import {
   TFormValues,
   TSourceError,
 } from '../asset-form/asset-form';
-import { useCmsAuth } from '../../contexts/cms-auth-context';
-import { AddNewSourceWithPuckImagePicker } from '../add-new-source-with-puck-image-picker';
 
 type RowItem = { id: string; index: number } & AssetSource;
 
@@ -59,7 +56,6 @@ export const AssetsSourcesForm: FC<Props> = ({
   isDisabled,
 }) => {
   const intl = useIntl();
-  const { jwtToken } = useCmsAuth();
 
   const items: Array<AssetSource> = formik.values.sources ?? [];
 
@@ -141,14 +137,7 @@ export const AssetsSourcesForm: FC<Props> = ({
     {
       id: 'uri',
       header: uriLabel,
-      accessor: (row) =>
-        jwtToken ? (
-          <Text truncate title={row.uri || ''}>
-            {row.uri || ''}
-          </Text>
-        ) : (
-          renderTextInput(row, 'uri', uriLabel)
-        ),
+      accessor: (row) => renderTextInput(row, 'uri', uriLabel),
     },
     {
       id: 'width',
@@ -183,12 +172,7 @@ export const AssetsSourcesForm: FC<Props> = ({
     },
   ];
 
-  const footer = jwtToken ? (
-    <AddNewSourceWithPuckImagePicker
-      isDisabled={isDisabled}
-      onConfirm={(uri) => onAddEnumValue({ ...emptyRow, uri })}
-    />
-  ) : (
+  const footer = (
     <Button
       variant="outline"
       colorPalette="primary"

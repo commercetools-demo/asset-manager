@@ -9,7 +9,6 @@ Merchant Center Custom View (`CustomPanel`) for managing assets on product varia
 - The app lives in `asset-manager/`; the repo root only holds Connect/CI config.
 - Locators: `products.product_variant_details.general`, `products.product_variant_details.images`, `categories.category_details.general` (see `asset-manager/custom-view-config.mjs`).
 - Has `@types/`, `@types-extensions/`, `schemas/` and a `tsconfig.json`; generated commercetools GraphQL types live in `src/types/generated/ctp.ts`.
-- Talks to an external CMS API (`CMS_API_URL`) for the shared asset storage.
 
 ## How To Work Here
 

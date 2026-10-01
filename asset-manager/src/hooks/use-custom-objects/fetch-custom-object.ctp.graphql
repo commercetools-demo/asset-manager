@@ -1,9 +1,0 @@
-query FetchCustomObject($container: String!, $key: String!) {
-  customObject(container: $container, key: $key) {
-    id
-    version
-    container
-    key
-    value
-  }
-}

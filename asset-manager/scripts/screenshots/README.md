@@ -46,5 +46,3 @@ Override the port with `MC_PORT` if needed.
   category page (e.g. `/<project>/categories/<id>/general`), restart `npm start`, and
   run `MC_LOCATOR=category npm run capture`. Switch it back afterward. The saved
   login doesn't need to be redone.
-- The asset image picker (`Add new source`) only appears when the CMS login in
-  `CMS_API_URL` succeeds; otherwise the sources form falls back to plain URL inputs.

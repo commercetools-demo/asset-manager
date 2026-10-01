@@ -8,22 +8,6 @@ declare module '*/update-product.ctp.graphql' {
   export default defaultDocument;
 }
 
-declare module '*/fetch-custom-object.ctp.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const FetchCustomObject: DocumentNode;
-
-  export default defaultDocument;
-}
-
-declare module '*/set-custom-object.graphql' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const SetCustomObject: DocumentNode;
-
-  export default defaultDocument;
-}
-
 declare module '*/fetch-channel-details.ctp.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

@@ -15,7 +15,6 @@ import messages from './messages';
 import AssetsSourcesForm, {
   OnChangeValue,
 } from '../assets-sources-form/assets-sources-form';
-import { CmsAuthProvider } from '../../contexts/cms-auth-context';
 type Formik = ReturnType<typeof useFormik>;
 
 export type AssetSource = {
@@ -167,74 +166,72 @@ export const AssetForm: FC<Props> = ({ initialValues, onSubmit, children }) => {
   const errors = formik.errors as unknown as Partial<TErrors>;
 
   const formElements = (
-    <CmsAuthProvider>
-      <FormikProvider value={formik}>
-        <Stack direction="column" gap="400">
-          <Grid templateColumns="repeat(2, minmax(0, 1fr))" gap="400">
-            <Card.Root variant="outlined" size="sm">
-              <Card.Body>
-                <LocalizedField
-                  name="name"
-                  label={intl.formatMessage(messages.name)}
-                  valuesByLocaleOrCurrency={formik.values.name || {}}
-                  defaultLocaleOrCurrency={dataLocale}
-                  isRequired
-                  errors={errors.name}
-                  touched={!!formik.touched.name}
-                  onBlur={() => formik.setFieldTouched('name', true)}
-                  onChange={(event) =>
-                    formik.setFieldValue(
-                      `name.${event.target.locale}`,
-                      event.target.value
-                    )
-                  }
-                />
-              </Card.Body>
-            </Card.Root>
-            <Card.Root variant="outlined" size="sm">
-              <Card.Body>
-                <LocalizedField
-                  name="description"
-                  label={intl.formatMessage(messages.description)}
-                  valuesByLocaleOrCurrency={formik.values.description}
-                  defaultLocaleOrCurrency={dataLocale}
-                  errors={errors.description}
-                  touched={!!formik.touched.description}
-                  onBlur={() => formik.setFieldTouched('description', true)}
-                  onChange={(event) =>
-                    formik.setFieldValue(
-                      `description.${event.target.locale}`,
-                      event.target.value
-                    )
-                  }
-                />
-              </Card.Body>
-            </Card.Root>
-            <Card.Root variant="outlined" size="sm">
-              <Card.Body>
-                <TextInputField
-                  name="key"
-                  value={formik.values.key || ''}
-                  label={intl.formatMessage(messages.keyTitle)}
-                  description={intl.formatMessage(messages.keyHint)}
-                  errors={errors.key}
-                  touched={!!formik.touched.key}
-                  onBlur={() => formik.setFieldTouched('key', true)}
-                  onChange={(value) => formik.setFieldValue('key', value)}
-                  renderError={renderKeyInputErrors}
-                />
-              </Card.Body>
-            </Card.Root>
-          </Grid>
-          <AssetsSourcesForm
-            formik={formik}
-            onAddEnumValue={handleAddEnumValue}
-            onChangeValue={handleChangeEnumValue}
-            onRemoveValue={handleRemoveEnumValue}
-          />
-        </Stack>
-      </FormikProvider>
-    </CmsAuthProvider>
+    <FormikProvider value={formik}>
+      <Stack direction="column" gap="400">
+        <Grid templateColumns="repeat(2, minmax(0, 1fr))" gap="400">
+          <Card.Root variant="outlined" size="sm">
+            <Card.Body>
+              <LocalizedField
+                name="name"
+                label={intl.formatMessage(messages.name)}
+                valuesByLocaleOrCurrency={formik.values.name || {}}
+                defaultLocaleOrCurrency={dataLocale}
+                isRequired
+                errors={errors.name}
+                touched={!!formik.touched.name}
+                onBlur={() => formik.setFieldTouched('name', true)}
+                onChange={(event) =>
+                  formik.setFieldValue(
+                    `name.${event.target.locale}`,
+                    event.target.value
+                  )
+                }
+              />
+            </Card.Body>
+          </Card.Root>
+          <Card.Root variant="outlined" size="sm">
+            <Card.Body>
+              <LocalizedField
+                name="description"
+                label={intl.formatMessage(messages.description)}
+                valuesByLocaleOrCurrency={formik.values.description}
+                defaultLocaleOrCurrency={dataLocale}
+                errors={errors.description}
+                touched={!!formik.touched.description}
+                onBlur={() => formik.setFieldTouched('description', true)}
+                onChange={(event) =>
+                  formik.setFieldValue(
+                    `description.${event.target.locale}`,
+                    event.target.value
+                  )
+                }
+              />
+            </Card.Body>
+          </Card.Root>
+          <Card.Root variant="outlined" size="sm">
+            <Card.Body>
+              <TextInputField
+                name="key"
+                value={formik.values.key || ''}
+                label={intl.formatMessage(messages.keyTitle)}
+                description={intl.formatMessage(messages.keyHint)}
+                errors={errors.key}
+                touched={!!formik.touched.key}
+                onBlur={() => formik.setFieldTouched('key', true)}
+                onChange={(value) => formik.setFieldValue('key', value)}
+                renderError={renderKeyInputErrors}
+              />
+            </Card.Body>
+          </Card.Root>
+        </Grid>
+        <AssetsSourcesForm
+          formik={formik}
+          onAddEnumValue={handleAddEnumValue}
+          onChangeValue={handleChangeEnumValue}
+          onRemoveValue={handleRemoveEnumValue}
+        />
+      </Stack>
+    </FormikProvider>
   );
   return children({
     formElements,

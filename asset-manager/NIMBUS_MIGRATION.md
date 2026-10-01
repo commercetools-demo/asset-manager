@@ -17,11 +17,6 @@ slate, slate-dom, slate-history, slate-hyperscript, slate-react
   even though this app doesn't use `RichTextInput` — Nimbus's bundle pulls
   the component in regardless, and `esbuild`-based tooling (see chakra
   typegen below) will fail to resolve the module without them.
-- `@commercetools-demo/puck-image-picker` had to go from `0.2.x` to `^0.8.1`:
-  the old version peer-depends on ten `@commercetools-uikit/*` packages and
-  fails the webpack build (`Can't resolve '@commercetools-uikit/text-input'`)
-  once UI Kit is gone. `0.8.x` is built on Nimbus and keeps the same
-  `ImagePickerProvider`/`ImagePickerField` API.
 - `react-redux@7.2.9`'s peer range doesn't cover React 19. Worked around with
   `legacy-peer-deps=true` in `.npmrc`.
 
