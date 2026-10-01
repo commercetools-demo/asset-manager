@@ -18,8 +18,8 @@ const config = {
     },
   },
   oAuthScopes: {
-    view: ['view_products'],
-    manage: ['manage_products'],
+    view: ['view_products', 'view_categories'],
+    manage: ['manage_products', 'manage_categories'],
   },
   type: 'CustomPanel',
   typeSettings: {
