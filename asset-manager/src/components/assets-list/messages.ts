@@ -29,13 +29,9 @@ export default defineMessages({
     id: 'Assets.add',
     defaultMessage: 'Add an asset',
   },
-  reorder: {
-    id: 'Assets.reorder',
-    defaultMessage: 'Reorder',
-  },
-  delete: {
-    id: 'Assets.delete',
-    defaultMessage: 'Delete',
+  reorderSuccess: {
+    id: 'Assets.reorderSuccess',
+    defaultMessage: 'The asset order has been saved.',
   },
   createSuccess: {
     id: 'AddAsset.form.message.success',

@@ -1,21 +1,21 @@
 import { FormattedMessage, useIntl } from 'react-intl';
-import {
-  Alert,
-  Button,
-  Heading,
-  Stack,
-  ToggleButton,
-} from '@commercetools/nimbus';
-import { Add, Delete, DragIndicator } from '@commercetools/nimbus-icons';
+import { Alert, Button, Heading, Stack } from '@commercetools/nimbus';
+import { Add } from '@commercetools/nimbus-icons';
 import messages from './messages';
 import { FC, useState } from 'react';
+import { DOMAINS } from '@commercetools-frontend/constants';
+import {
+  TApiErrorNotificationOptions,
+  useShowApiErrorNotification,
+  useShowNotification,
+} from '@commercetools-frontend/actions-global';
+import { transformErrors } from '../assets-edit/transform-errors';
 import DeleteAsset from '../assets-delete';
 import AssetTable from '../assets-table';
 import { InfoMainPage } from '@commercetools-frontend/application-components';
 import AssetsCreate from '../assets-create';
 import { TAsset, TAssetDraftInput } from '../../types/generated/ctp';
 import AssetsEdit from '../assets-edit';
-import AssetsReorderList from '../assets-reorder-list';
 
 type Props = {
   onEdit: (
@@ -54,8 +54,28 @@ const AssetsList: FC<Props> = ({
   const [isEditAssetOpen, setIsEditAssetOpen] = useState(false);
   const [asset, setAsset] = useState<TAsset | undefined>(undefined);
   const [isDeleteAssetOpen, setIsDeleteAssetOpen] = useState(false);
-  const [isReorder, setIsReorder] = useState(false);
-  const [selectedAssets, setSelectedAssets] = useState<Array<TAsset>>([]);
+  const [assetsToDelete, setAssetsToDelete] = useState<Array<TAsset>>([]);
+  const showNotification = useShowNotification();
+  const showApiErrorNotification = useShowApiErrorNotification();
+
+  const handleReorder = async (reordered: Array<TAsset>) => {
+    try {
+      await onSortFinish(reordered);
+      showNotification({
+        kind: 'success',
+        domain: DOMAINS.SIDE,
+        text: intl.formatMessage(messages.reorderSuccess),
+      });
+    } catch (graphQLErrors) {
+      const { unmappedErrors } = transformErrors(graphQLErrors);
+      showApiErrorNotification({
+        errors: unmappedErrors as TApiErrorNotificationOptions['errors'],
+      });
+      throw graphQLErrors;
+    } finally {
+      await refetch();
+    }
+  };
 
   return (
     <InfoMainPage
@@ -78,44 +98,18 @@ const AssetsList: FC<Props> = ({
       <Stack direction="column" gap="800">
         {assets.length > 0 ? (
           <Stack direction="column" gap="100" align="stretch">
-            <Stack direction="row" justify="flex-start" gap="200">
-              <Button
-                variant="outline"
-                colorPalette="critical"
-                isDisabled={isReorder || selectedAssets.length === 0}
-                onPress={() => setIsDeleteAssetOpen(true)}
-              >
-                <Delete />
-                {intl.formatMessage(messages.delete)}
-              </Button>
-              <ToggleButton
-                colorPalette="primary"
-                isSelected={isReorder}
-                onChange={setIsReorder}
-              >
-                <DragIndicator />
-                {intl.formatMessage(messages.reorder)}
-              </ToggleButton>
-            </Stack>
-            {isReorder ? (
-              <AssetsReorderList
-                items={assets}
-                onSortFinish={onSortFinish}
-                onClose={async () => {
-                  await refetch();
-                  setIsReorder(false);
-                }}
-              />
-            ) : (
-              <AssetTable
-                items={assets}
-                onSelectionChange={setSelectedAssets}
-                onRowClick={(row) => {
-                  setAsset(row);
-                  setIsEditAssetOpen(true);
-                }}
-              />
-            )}
+            <AssetTable
+              items={assets}
+              onDeleteClick={(row) => {
+                setAssetsToDelete([row]);
+                setIsDeleteAssetOpen(true);
+              }}
+              onReorder={handleReorder}
+              onRowClick={(row) => {
+                setAsset(row);
+                setIsEditAssetOpen(true);
+              }}
+            />
           </Stack>
         ) : (
           <Alert.Root colorPalette="info">
@@ -150,7 +144,7 @@ const AssetsList: FC<Props> = ({
               setIsDeleteAssetOpen(false);
             }}
             onDelete={onDelete}
-            selectedAssets={selectedAssets}
+            selectedAssets={assetsToDelete}
           />
         )}
       </Stack>

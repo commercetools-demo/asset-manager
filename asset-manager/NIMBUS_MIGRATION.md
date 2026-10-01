@@ -59,8 +59,11 @@ browser global, extend the shim.
   `LocalizedField`'s event carries the locale in `event.target.locale`.
 - **`NumberInput` value must be a number.** Empty is `NaN`; the sources form
   maps `NaN` back to `undefined` before storing it in Formik.
-- **DataTable selection is `'all' | Set<Key>`.** `assets-table.tsx` handles
-  the `'all'` branch explicitly — missing it silently drops select-all.
+- **Avoid `key` as a Nimbus DataTable column id.** In this app it made the
+  header collect no columns ("Cell count must match column count").
+- **DraggableList calls `onUpdateItems` on mount and whenever the handler
+  changes identity**, not only on drop. `assets-table.tsx` keeps the handler
+  stable and only saves when the order differs from the server's.
 
 ## Component mapping used
 
@@ -76,9 +79,8 @@ browser global, extend the shim.
 | `LocalizedTextField` / `LocalizedTextInput` statics | `LocalizedField` (+ its `isEmpty`/`createLocalizedString`/`omitEmptyTranslations` statics) |
 | `TextField` | `TextInputField` (`errors` + `renderError` kept) |
 | `TextInput` / `NumberInput` + `ErrorMessage` | `TextInput` / `NumberInput` + `FieldErrors` |
-| `DataTable` + `useRowSelection` + `CheckboxInput` | `DataTable.Root` with `selectionMode="multiple"` |
-| `DataTableManager` | `DataTable.Manager` inside `DataTable.Root` |
-| `react-sortable-hoc` reorder grid | `DraggableList.Root` + `DraggableList.Item` (`assets-reorder-list`) |
+| `DataTable` + `useRowSelection` + `CheckboxInput`, and the separate `react-sortable-hoc` reorder mode | `DraggableList.Root` with `selectionMode="multiple"`: drag to reorder (saved on drop), checkboxes for delete, `onAction` opens edit |
+| Sources `DataTable` with inputs | `Grid` of inputs |
 | `SelectField` "Actions" (single `Delete` option) | a `Delete` `Button`, disabled until rows are selected |
 | `@commercetools-uikit/icons` | `@commercetools/nimbus-icons` (`Add`, `Delete`) |
 
